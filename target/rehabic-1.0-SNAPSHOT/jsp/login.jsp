@@ -3,7 +3,7 @@
 <%@page import="java.security.MessageDigest"%>
 <%@ include file="conexion.jsp" %>
 
-<%  
+<%
     Statement st = null;
     ResultSet rs = null;
 
@@ -15,9 +15,16 @@
     HttpSession sesion = request.getSession();
 
     try {
-        // Consultamos el rol y los datos del usuario en la base de datos
-        st = conn.createStatement();
-        rs = st.executeQuery("SELECT u.usuario, u.idusuarios, u.idroles, r.rol FROM usuarios u INNER JOIN roles r ON u.idroles = r.idroles WHERE u.usuario='" + user + "' AND u.usu_clave='" + password + "';");
+        // Consulta segura utilizando PreparedStatement
+        String query = "SELECT u.usuario, u.idusuarios, u.idroles, r.rol " +
+                       "FROM usuarios u " +
+                       "INNER JOIN roles r ON u.idroles = r.idroles " +
+                       "WHERE u.usuario = ? AND u.usu_clave = ?";
+        PreparedStatement pst = conn.prepareStatement(query);
+        pst.setString(1, user);  // Sustituye el primer parámetro por el usuario ingresado
+        pst.setString(2, password); // Sustituye el segundo parámetro por la contraseña ingresada
+
+        rs = pst.executeQuery();
 
         if (rs.next()) {
             String rol = rs.getString("rol");
@@ -32,11 +39,10 @@
 
             // Cargamos los permisos del rol en la sesión
             ArrayList<String> permisos = new ArrayList<>();
-            PreparedStatement permisoStmt = conn.prepareStatement(
-                "SELECT per_nombre FROM permisos p " +
-                "JOIN roles_permisos rp ON p.idpermisos = rp.idpermisos " +
-                "WHERE rp.idroles = ?"
-            );
+            String permisosQuery = "SELECT per_nombre FROM permisos p " +
+                                   "JOIN roles_permisos rp ON p.idpermisos = rp.idpermisos " +
+                                   "WHERE rp.idroles = ?";
+            PreparedStatement permisoStmt = conn.prepareStatement(permisosQuery);
             permisoStmt.setInt(1, roleId);
             ResultSet permisosRs = permisoStmt.executeQuery();
             while (permisosRs.next()) {

@@ -35,41 +35,7 @@ if(request.getParameter("listar").equals("listar")){
         out.print("Error al listar roles y permisos: " + e.getMessage());
     }
 
-} else if (request.getParameter("listar").equals("listar")) {
-    try {
-        Statement st = conn.createStatement();
-        ResultSet rs = st.executeQuery(
-            "SELECT r.idroles, r.rol, " +
-            "COALESCE(GROUP_CONCAT(p.per_nombre SEPARATOR ', '), 'Sin permisos') AS permisos " +
-            "FROM roles r " +
-            "LEFT JOIN roles_permisos rp ON r.idroles = rp.idroles " +
-            "LEFT JOIN permisos p ON rp.idpermisos = p.idpermisos " +
-            "GROUP BY r.idroles, r.rol " +
-            "ORDER BY r.idroles ASC"
-        );
-
-        while (rs.next()) {
-%>
-<tr>
-    <td><%= rs.getString("idroles") %></td>
-    <td><%= rs.getString("rol") %></td>
-    <td><%= rs.getString("permisos") %></td>
-    <td>
-        <i title="modificar" class="bi bi-pencil-square" 
-           onclick="setModificar('<%= rs.getString("idroles") %>', '<%= rs.getString("rol") %>');" 
-           data-bs-toggle="modal" data-bs-target="#modalModificar"></i>
-        <i title="eliminar" class="bi bi-trash" 
-           onclick="$('#idroles_e').val('<%= rs.getString("idroles") %>');" 
-           data-bs-toggle="modal" data-bs-target="#exampleModal"></i>
-    </td>
-</tr>
-<%
-        }
-    } catch (Exception e) {
-        out.print("Error al listar roles y permisos: " + e.getMessage());
-    }
-}
- else if(request.getParameter("listar").equals("cargar")) {
+} else if(request.getParameter("listar").equals("cargar")) {
 
     String rol = request.getParameter("rol");
     String[] permisos = request.getParameterValues("permisos");
