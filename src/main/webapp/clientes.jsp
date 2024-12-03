@@ -46,6 +46,17 @@
                     </div>
                 </div>
 
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="usuario_asociado" class="form-label">Usuario Asociado</label>
+                        <select class="form-control" id="usuario_asociado" name="idusuarios">
+                            <option value="">Sin usuario asociado</option>
+                            <!-- Opciones de usuario se cargarán dinámicamente -->
+                        </select>
+                    </div>
+                </div>
+
+
                 <div class="d-flex justify-content-between mt-4">
                     <button type="button" class="btn btn-primary" id="boton-aceptar" name="boton-aceptar">Guardar</button>
                     <button type="reset" class="btn btn-secondary" id="boton-cancelar" name="boton-cancelar">Cancelar</button>
@@ -75,6 +86,7 @@
                             <th>Cédula</th>
                             <th>Teléfono</th>
                             <th>Teléfono de Urgencia</th>
+                            <th>Usuario</th>
                             <th>Opciones</th>
                         </tr>
                     </thead>
@@ -119,6 +131,15 @@
                         <label for="cli_telurgencia_m" class="form-label">Teléfono de Urgencia</label>
                         <input type="text" class="form-control" id="cli_telurgencia_m" name="cli_telurgencia">
                     </div>
+                    <div class="mb-3">
+                        <label for="usuario_asociado_m" class="form-label">Usuario Asociado</label>
+                        <select class="form-control" id="usuario_asociado_m" name="idusuario">
+                            <option value="">Sin usuario asociado</option>
+                            <!-- Opciones de usuario se cargarán dinámicamente -->
+                        </select>
+
+                    </div>
+
                 </form>
             </div>
             <div class="modal-footer">
@@ -155,6 +176,7 @@
 <script>
     $(document).ready(function () {
         rellenardatos();
+        cargarUsuariosDisponibles();
     });
 
     // Función para cargar los datos en la tabla
@@ -172,6 +194,22 @@
         });
     }
 
+    // Cargar usuarios disponibles en el select
+    function cargarUsuariosDisponibles() {
+        $.ajax({
+            data: {listar: 'usuarios_disponibles'},
+            url: 'jsp/clientesM.jsp',
+            type: 'post',
+            success: function (response) {
+                $("#usuario_asociado").html('<option value="">Sin usuario asociado</option>' + response);
+                $("#usuario_asociado_m").html('<option value="">Sin usuario asociado</option>' + response);
+            },
+            error: function () {
+                console.error("Error al cargar usuarios disponibles.");
+            }
+        });
+    }
+
     // Evento para guardar un nuevo cliente
     $("#boton-aceptar").on("click", function () {
         const cedula = $("#cli_cedula").val().trim();
@@ -179,7 +217,11 @@
         const apellido = $("#cli_apellidos").val().trim();
         const nacimiento = $("#cli_fechanacimiento").val().trim();
         const telefono = $("#cli_telefono").val().trim();
+        const idusuarios = $("#usuario_asociado").val(); //capturamos el usuario asociado
 
+        console.log("Datos enviados:", {
+            cedula, nombre, apellido, nacimiento, telefono, idusuarios
+        });
         // Validar campos obligatorios
         if (!cedula || !nombre || !apellido || !nacimiento || !telefono) {
             $("#mensaje").html("<div class='alert alert-danger'>Todos los campos marcados son obligatorios.</div>");
@@ -196,7 +238,7 @@
                     $("#mensaje").html("<div class='alert alert-danger'>La cédula ya está registrada. Use una diferente.</div>");
                 } else if (response.trim() === "disponible") {
                     // Proceder a guardar
-                    const datos = $("#form").serialize();
+                    const datos = $("#form").serialize() + `&usuario_asociado=${usuarioAsociado}`; // Incluimos el usuario
                     $.ajax({
                         url: 'jsp/clientesM.jsp',
                         type: 'post',
@@ -248,7 +290,10 @@
     });
 
     // Función para cargar datos en el modal de edición
-    function rellenaredit(id, nombre, apellido, nacimiento, cedula, telefono, telurgencia) {
+    function rellenaredit(id, nombre, apellido, nacimiento, cedula, telefono, telurgencia, usuario_asociado) {
+        console.log("Datos recibidos para edición:", {id, nombre, apellido, nacimiento, cedula, telefono, telurgencia, usuario_asociado});
+
+        // Asignar valores a los campos del modal
         $("#idcliente_m").val(id);
         $("#cli_nombres_m").val(nombre);
         $("#cli_apellidos_m").val(apellido);
@@ -256,10 +301,32 @@
         $("#cli_cedula_m").val(cedula);
         $("#cli_telefono_m").val(telefono);
         $("#cli_telurgencia_m").val(telurgencia);
+
+        // Cargar usuarios disponibles y asignar el valor del usuario asociado
+        $.ajax({
+            data: {listar: 'usuarios_disponibles'},
+            url: 'jsp/clientesM.jsp',
+            type: 'post',
+            success: function (response) {
+                $("#usuario_asociado_m").html('<option value="">Sin usuario asociado</option>' + response);
+                if (usuario_asociado && usuario_asociado !== "") {
+                    $("#usuario_asociado_m").val(usuario_asociado); // Seleccionar el usuario asociado
+                } else {
+                    $("#usuario_asociado_m").val(""); // Sin usuario asociado por defecto
+                }
+            },
+            error: function () {
+                console.error("Error al cargar usuarios disponibles.");
+            }
+        });
+
+        // Mostrar el modal
         $("#modalEditarCliente").modal("show");
     }
 
-    // Evento para guardar cambios desde el modal de edición
+
+
+// Evento para guardar cambios desde el modal de edición
     $("#guardar-editar-cliente").on("click", function () {
         const cedula = $("#cli_cedula_m").val().trim();
         const idCliente = $("#idcliente_m").val();
@@ -267,6 +334,7 @@
         const apellido = $("#cli_apellidos_m").val().trim();
         const nacimiento = $("#cli_fechanacimiento_m").val().trim();
         const telefono = $("#cli_telefono_m").val().trim();
+        const idusuario = $("#usuario_asociado_m").val(); // Capturar el usuario asociado desde el select
 
         // Validar campos obligatorios
         if (!cedula || !nombre || !apellido || !nacimiento || !telefono) {
@@ -295,14 +363,12 @@
             data: {listar: 'verificar_cedula', cli_cedula: cedula, idcliente: idCliente},
             success: function (response) {
                 console.log("Respuesta de la verificación de cédula:", response.trim());
-
                 if (response.trim() === "duplicado") {
                     $("#mensaje").html("<div class='alert alert-danger'>La cédula ya está registrada. Use una diferente.</div>");
                 } else if (response.trim() === "disponible") {
                     // Proceder con la actualización
-                    const datos = $("#formEditarCliente").serialize();
+                    const datos = $("#formEditarCliente").serialize(); // Serializa todo el formulario
                     console.log("Datos enviados para modificar cliente:", datos);
-
                     $.ajax({
                         url: 'jsp/clientesM.jsp',
                         type: 'POST',
@@ -328,10 +394,11 @@
         });
     });
 
-
-    // Limpiar mensajes al cerrar el modal
+// Limpiar mensajes al cerrar el modal
     $('#modalEditarCliente').on('hidden.bs.modal', function () {
         $("#mensaje").html("");
     });
+
+
 </script>
 

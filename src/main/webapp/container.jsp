@@ -82,7 +82,7 @@
                         <div class="col mr-2">
                             <div class="text font-weight-bold text-warning text-uppercase mb-1">Mensualidades</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                Próximos: <span id="proximosPagos">0</span>
+                                Por vencer: <span id="proximosPagos">0</span>
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-danger">
                                 Vencidos: <span id="pagosVencidos">0</span>
@@ -138,7 +138,7 @@
                         title: '¡Pagos vencidos!',
                         text: `Tienes ${vencidos} pago(s) vencido(s).`,
                         icon: 'error',
-                        timer: 3000,
+                        timer: 1500,
                         timerProgressBar: true,
                         showConfirmButton: false
                     });
@@ -147,7 +147,7 @@
                         title: '¡Pagos próximos a vencer!',
                         text: `Tienes ${proximos} pago(s) próximo(s) a vencer.`,
                         icon: 'warning',
-                        timer: 3000,
+                        timer: 1500,
                         timerProgressBar: true,
                         showConfirmButton: false
                     });
