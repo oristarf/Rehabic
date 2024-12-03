@@ -17,11 +17,16 @@
                     <input type="text" class="form-control form-control-user" id="ser_nombre" name="ser_nombre" placeholder="Nombre del Servicio">
                 </div>
                 <div class="form-group mb-3">
-                    <label for="descripcion" class="form-label">Descripción</label>
-                    <input type="text" class="form-control form-control-user" id="ser_descripcion" name="ser_descripcion" placeholder="Descripción del Servicio">
+                    <label for="ser_tipo" class="form-label">Tipo de Servicio</label>
+                    <select class="form-control" id="ser_tipo" name="ser_tipo">
+                        <option value="">Seleccionar tipo</option>
+                        <option value="Mensual">Mensual</option>
+                        <option value="Diario">Diario</option>
+                    </select>
                 </div>
+
                 <div class="form-group mb-3">
-                    <label for="costo" class="form-label">Costo</label>
+                    <label for="costo" class="form-label">Precio</label>
                     <input type="number" class="form-control form-control-user" id="ser_precio" name="ser_precio" placeholder="Precio del Servicio">
                 </div>
 
@@ -43,7 +48,7 @@
                         <tr>
                             <th>#</th>
                             <th>Servicio</th>
-                            <th>Descripción</th>
+                            <th>Tipo</th> <!-- Nueva columna para el tipo de servicio -->
                             <th>Precio</th>
                             <th>Opciones</th>
                         </tr>
@@ -52,6 +57,45 @@
                         <!-- Datos de servicios se cargan aquí -->
                     </tbody>
                 </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Modal de Edición de Servicio -->
+<div class="modal fade" id="modalModificar" tabindex="-1" aria-labelledby="modalModificarLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalModificarLabel">Editar Servicio</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formEditarServicio">
+                    <input type="hidden" id="idservicio_m" name="idservicio">
+                    <div class="form-group mb-3">
+                        <label for="ser_nombre_m" class="form-label">Nombre del Servicio</label>
+                        <input type="text" class="form-control" id="ser_nombre_m" name="ser_nombre" placeholder="Nombre del Servicio">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="ser_tipo_m" class="form-label">Tipo de Servicio</label>
+                        <select class="form-control" id="ser_tipo_m" name="ser_tipo">
+                            <option value="">Seleccionar tipo</option>
+                            <option value="Mensual">Mensual</option>
+                            <option value="Diario">Diario</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="ser_precio_m" class="form-label">Precio</label>
+                        <input type="number" class="form-control" id="ser_precio_m" name="ser_precio" placeholder="Precio del Servicio">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div id="mensaje_modal" class="mt-3 text-center"></div>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="guardarEditarServicio">Guardar</button>
             </div>
         </div>
     </div>
@@ -84,7 +128,7 @@
         rellenardatos();
     });
 
-// Cargar los datos de los servicios en la tabla
+    // Cargar los datos de los servicios en la tabla
     function rellenardatos() {
         $.ajax({
             data: {listar: 'listar'},
@@ -96,11 +140,14 @@
         });
     }
 
-// Verificar duplicados antes de guardar
+    // Verificar duplicados antes de guardar
     $("#boton-aceptar").on("click", function () {
         const ser_nombre = $("#ser_nombre").val().trim();
-        if (ser_nombre === "") {
-            $("#mensaje").html("<div class='alert alert-danger'>El nombre del servicio no puede estar vacío.</div>");
+        const ser_tipo = $("#ser_tipo").val().trim(); // Nuevo campo tipo de servicio
+
+        // Validar campos obligatorios
+        if (!ser_nombre || !$("#ser_precio").val().trim() || !ser_tipo) {
+            $("#mensaje").html("<div class='alert alert-danger'>Debe completar todos los campos obligatorios, incluido el tipo de servicio.</div>");
             return;
         }
 
@@ -119,15 +166,14 @@
                         data: datos,
                         url: 'jsp/serviciosM.jsp',
                         type: 'post',
-                        
                         success: function (response) {
                             $("#mensaje").html(response);
                             rellenardatos();
-                            
+
                             setTimeout(function () {
                                 $("#mensaje").html("");
                                 $("#ser_nombre").val("");
-                                $("#ser_descripcion").val("");
+                                $("#ser_tipo").val(""); // Limpiar el tipo de servicio
                                 $("#ser_precio").val("");
                                 $("#listar").val("cargar");
                             }, 2000);
@@ -138,21 +184,65 @@
         });
     });
 
-// Configurar los datos en el modal de modificación
-    function setModificar(id, ser_nombre, ser_descripcion, ser_precio) {
-        $('#idservicio').val(id);
-        $('#ser_nombre').val(ser_nombre);
-        $('#ser_descripcion').val(ser_descripcion);
-        $('#ser_precio').val(ser_precio);
-        $('#listar').val('modificar');
+    // Configurar los datos en el modal de modificación
+    function setModificar(id, ser_nombre, ser_tipo, ser_precio) {
+        $('#idservicio_m').val(id);
+        $('#ser_nombre_m').val(ser_nombre);
+        $('#ser_tipo_m').val(ser_tipo); // Nuevo campo tipo de servicio
+        $('#ser_precio_m').val(ser_precio);
+        $('#modalModificar').modal('show');
     }
 
-// Configurar el ID del servicio a eliminar en el modal de confirmación
+    // Guardar cambios en el servicio
+    $("#guardarEditarServicio").on("click", function () {
+        const ser_nombre = $("#ser_nombre_m").val().trim();
+        const ser_tipo = $("#ser_tipo_m").val().trim(); // Validar el campo tipo de servicio
+        const idservicio = $("#idservicio_m").val();
+
+        // Validar campos obligatorios
+        if (!ser_nombre || !$("#ser_precio_m").val().trim() || !ser_tipo) {
+            $("#mensaje_modal").html("<div class='alert alert-danger'>Debe completar todos los campos obligatorios, incluido el tipo de servicio.</div>");
+            return;
+        }
+
+        // Comprobar duplicados excluyendo el idservicio actual
+        $.ajax({
+            url: 'jsp/serviciosM.jsp',
+            type: 'POST',
+            data: {listar: 'verificar_duplicado', ser_nombre: ser_nombre, idservicio: idservicio},
+            success: function (response) {
+                if (response.trim() === "duplicado") {
+                    $("#mensaje_modal").html("<div class='alert alert-danger'>El nombre del servicio ya existe. Ingrese un nombre diferente.</div>");
+                } else {
+                    // Proceder a guardar los cambios
+                    const datos = $("#formEditarServicio").serialize();
+                    $.ajax({
+                        url: 'jsp/serviciosM.jsp',
+                        type: 'POST',
+                        data: datos + '&listar=modificar',
+                        success: function (response) {
+                            $("#mensaje").html(response); // Mostrar mensaje en la página principal
+                            rellenardatos(); // Actualizar la tabla
+                            $("#modalModificar").modal("hide"); // Cerrar el modal
+                        },
+                        error: function () {
+                            $("#mensaje_modal").html("<div class='alert alert-danger'>Error al guardar los cambios.</div>");
+                        }
+                    });
+                }
+            },
+            error: function () {
+                $("#mensaje_modal").html("<div class='alert alert-danger'>Error al verificar duplicados.</div>");
+            }
+        });
+    });
+
+    // Configurar el ID del servicio a eliminar en el modal de confirmación
     function setEliminar(id) {
         $('#idservicio_e').val(id);
     }
 
-// Ejecutar la eliminación al confirmar en el modal
+    // Ejecutar la eliminación al confirmar en el modal
     $("#eliminaregistro").on("click", function () {
         const idservicio = $("#idservicio_e").val(); // Toma el ID del servicio a eliminar
         $.ajax({
@@ -160,13 +250,27 @@
             url: 'jsp/serviciosM.jsp',
             type: 'post',
             success: function (response) {
+                // Mostrar el mensaje en el contenedor principal
                 $("#mensaje").html(response);
-                rellenardatos(); // Refresca la tabla para mostrar los cambios
+
+                // Cerrar el modal más rápido
+                $("#modalEliminar").modal('hide');
+
+                // Actualizar la tabla después de un pequeño retraso
                 setTimeout(function () {
-                    $("#mensaje").html("");
-                    $("#modalEliminar").modal('hide'); // Cierra el modal de eliminación
+                    $("#mensaje").html(""); // Limpiar el mensaje
+                    rellenardatos(); // Refresca la tabla
+                }, 2000);
+            },
+            error: function () {
+                $("#mensaje").html("<div class='alert alert-danger'>Error al eliminar el servicio.</div>");
+                $("#modalEliminar").modal('hide');
+
+                setTimeout(function () {
+                    $("#mensaje").html(""); // Limpiar el mensaje
                 }, 2000);
             }
         });
     });
 </script>
+

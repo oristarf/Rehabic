@@ -1,8 +1,7 @@
-
 <%@include file="header.jsp"%>
 
 <div class="container-fluid">
-    
+
     <!-- Encabezado del Dashboard -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800"></h1>
@@ -77,12 +76,17 @@
 
         <!-- Tarjeta Pagos Pendientes -->
         <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-warning shadow h-100 py-2">
+            <div id="tarjetaPagosPendientes" class="card border-left-warning shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text font-weight-bold text-warning text-uppercase mb-1">Pagos Pendientes</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">10</div>
+                            <div class="text font-weight-bold text-warning text-uppercase mb-1">Mensualidades</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                Próximos: <span id="proximosPagos">0</span>
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-danger">
+                                Vencidos: <span id="pagosVencidos">0</span>
+                            </div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-exclamation-triangle fa-2x text-gray-300"></i>
@@ -91,75 +95,72 @@
                 </div>
             </div>
         </div>
+
     </div>
 
-    <!-- Fila de Gráficos -->
-    <div class="row">
-        <!-- Gráfico de Tratamientos -->
-        <div class="col-xl-6 col-lg-6">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="background: linear-gradient(135deg, #6c757d 10%, #17a2b8 90%); color: white;">
-                    <h6 class="m-0 font-weight-bold">Tratamientos por Estado</h6>
-                </div>
-                <div class="card-body">
-                    <div class="chart-pie pt-4 pb-2">
-                        <canvas id="treatmentPieChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Gráfico de Asistencias -->
-        <div class="col-xl-6 col-lg-6">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" style="background: linear-gradient(135deg, #28a745 10%, #218838 90%); color: white;">
-                    <h6 class="m-0 font-weight-bold">Asistencias Mensuales</h6>
-                </div>
-                <div class="card-body">
-                    <div class="chart-bar pt-4 pb-2">
-                        <canvas id="attendanceBarChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 <%@include file="footer.jsp"%>
 
-<!-- Scripts para Gráficos -->
-<script src="vendor/chart.js/Chart.min.js"></script>
 <script>
-    // Gráfico de Tratamientos
-    var ctxPie = document.getElementById("treatmentPieChart");
-    var treatmentPieChart = new Chart(ctxPie, {
-        type: 'pie',
-        data: {
-            labels: ["En progreso", "Completados", "Pendientes"],
-            datasets: [{
-                data: [30, 40, 20],
-                backgroundColor: ['#17a2b8', '#28a745', '#ffc107'],
-            }],
-        },
+    $(document).ready(function () {
+        cargarNotificacionesVencimientos(); // Cargar notificaciones al abrir la página
     });
 
-    // Gráfico de Asistencias
-    var ctxBar = document.getElementById("attendanceBarChart");
-    var attendanceBarChart = new Chart(ctxBar, {
-        type: 'bar',
-        data: {
-            labels: ["Semana 1", "Semana 2", "Semana 3", "Semana 4"],
-            datasets: [{
-                label: "Asistencias",
-                backgroundColor: "#17a2b8",
-                data: [50, 60, 70, 80],
-            }],
+   function cargarNotificacionesVencimientos() {
+    $.ajax({
+        data: { listar: 'notificacionesVencimientos' },
+        url: 'jsp/pagosM.jsp',
+        type: 'post',
+        success: function (response) {
+            console.log("Respuesta del servidor:", response); // Depuración de la respuesta del backend
+
+            if (response.trim() !== "") {
+                let datos = response.trim().split("|");
+
+                // Limpieza de valores antes de convertir
+                let proximosRaw = datos[0].trim().replace(/[^0-9]/g, ""); // Elimina caracteres no numéricos
+                let vencidosRaw = datos[1].trim().replace(/[^0-9]/g, ""); // Elimina caracteres no numéricos
+
+                let proximos = parseInt(proximosRaw, 10) || 0; // Convierte a entero con valor por defecto 0
+                let vencidos = parseInt(vencidosRaw, 10) || 0;
+
+                console.log("Próximos vencimientos procesados:", proximos); // Depuración de "próximos"
+                console.log("Pagos vencidos procesados:", vencidos);       // Depuración de "vencidos"
+
+                // Actualizar la interfaz
+                $("#proximosPagos").text(proximos);
+                $("#pagosVencidos").text(vencidos);
+
+                // Alertas con SweetAlert2
+                if (vencidos > 0) {
+                    Swal.fire({
+                        title: '¡Pagos vencidos!',
+                        text: `Tienes ${vencidos} pago(s) vencido(s).`,
+                        icon: 'error',
+                        timer: 3000,
+                        timerProgressBar: true,
+                        showConfirmButton: false
+                    });
+                } else if (proximos > 0) {
+                    Swal.fire({
+                        title: '¡Pagos próximos a vencer!',
+                        text: `Tienes ${proximos} pago(s) próximo(s) a vencer.`,
+                        icon: 'warning',
+                        timer: 3000,
+                        timerProgressBar: true,
+                        showConfirmButton: false
+                    });
+                }
+            } else {
+                console.error("Respuesta vacía del servidor.");
+            }
         },
-        options: {
-            scales: {
-                x: { display: true, title: { display: true, text: 'Semanas' }},
-                y: { beginAtZero: true, title: { display: true, text: 'Asistencias' }},
-            },
+        error: function (xhr, status, error) {
+            console.error("Error AJAX:", error);
         }
     });
+}
+
 </script>
+

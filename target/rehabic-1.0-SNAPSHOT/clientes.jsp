@@ -8,7 +8,7 @@
         <div class="card-body">
             <div class="text-center mb-4">
             </div>
-            
+
             <form class="user" id="form" method="post">
                 <input type="hidden" class="form-control" id="listar" name="listar" value="cargar">
                 <input type="hidden" class="form-control" id="idcliente" name="idcliente">
@@ -16,7 +16,7 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="cli_nombres" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="cli_nombres" name="cli_nombres" placeholder="Nombre">
+                        <input type="text" class="form-control" id="cli_nombres" name="cli_nombres" placeholder="Nombre" required>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="cli_apellidos" class="form-label">Apellido</label>
@@ -84,6 +84,50 @@
         </div>
     </div>
 </div>
+<!-- Modal para editar cliente -->
+<div class="modal fade" id="modalEditarCliente" tabindex="-1" aria-labelledby="editarClienteLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editarClienteLabel">Editar Cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formEditarCliente">
+                    <input type="hidden" id="idcliente_m" name="idcliente">
+                    <div class="mb-3">
+                        <label for="cli_nombres_m" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="cli_nombres_m" name="cli_nombres">
+                    </div>
+                    <div class="mb-3">
+                        <label for="cli_apellidos_m" class="form-label">Apellido</label>
+                        <input type="text" class="form-control" id="cli_apellidos_m" name="cli_apellidos">
+                    </div>
+                    <div class="mb-3">
+                        <label for="cli_cedula_m" class="form-label">Cédula</label>
+                        <input type="text" class="form-control" id="cli_cedula_m" name="cli_cedula">
+                    </div>
+                    <div class="mb-3">
+                        <label for="cli_fechanacimiento_m" class="form-label">Fecha de Nacimiento</label>
+                        <input type="date" class="form-control" id="cli_fechanacimiento_m" name="cli_fechanacimiento">
+                    </div>
+                    <div class="mb-3">
+                        <label for="cli_telefono_m" class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" id="cli_telefono_m" name="cli_telefono">
+                    </div>
+                    <div class="mb-3">
+                        <label for="cli_telurgencia_m" class="form-label">Teléfono de Urgencia</label>
+                        <input type="text" class="form-control" id="cli_telurgencia_m" name="cli_telurgencia">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="guardar-editar-cliente">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Modal de confirmación de eliminación -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -113,6 +157,7 @@
         rellenardatos();
     });
 
+    // Función para cargar los datos en la tabla
     function rellenardatos() {
         $.ajax({
             data: {listar: 'listar'},
@@ -120,29 +165,67 @@
             type: 'post',
             success: function (response) {
                 $("#resultado tbody").html(response);
+            },
+            error: function () {
+                $("#mensaje").html("<div class='alert alert-danger'>Error al cargar los datos.</div>");
             }
         });
     }
 
+    // Evento para guardar un nuevo cliente
     $("#boton-aceptar").on("click", function () {
-        let dato = $("#form").serialize();
+        const cedula = $("#cli_cedula").val().trim();
+        const nombre = $("#cli_nombres").val().trim();
+        const apellido = $("#cli_apellidos").val().trim();
+        const nacimiento = $("#cli_fechanacimiento").val().trim();
+        const telefono = $("#cli_telefono").val().trim();
+
+        // Validar campos obligatorios
+        if (!cedula || !nombre || !apellido || !nacimiento || !telefono) {
+            $("#mensaje").html("<div class='alert alert-danger'>Todos los campos marcados son obligatorios.</div>");
+            return;
+        }
+
+        // Verificar duplicado de cédula
         $.ajax({
-            data: dato,
             url: 'jsp/clientesM.jsp',
             type: 'post',
+            data: {listar: 'verificar_cedula', cli_cedula: cedula},
             success: function (response) {
-                $("#mensaje").html(response);
-                rellenardatos();
-                setTimeout(function () {
-                    $("#mensaje").html("");
-                    $("#form")[0].reset();
-                    $("#cli_nombres").focus("");
-                    $("#listar").val("cargar");
-                }, 2000);
+                if (response.trim() === "duplicado") {
+                    $("#mensaje").html("<div class='alert alert-danger'>La cédula ya está registrada. Use una diferente.</div>");
+                } else if (response.trim() === "disponible") {
+                    // Proceder a guardar
+                    const datos = $("#form").serialize();
+                    $.ajax({
+                        url: 'jsp/clientesM.jsp',
+                        type: 'post',
+                        data: datos,
+                        success: function (response) {
+                            $("#mensaje").html(response);
+                            rellenardatos();
+                            setTimeout(function () {
+                                $("#mensaje").html("");
+                                $("#form")[0].reset();
+                                $("#cli_nombres").focus();
+                                $("#listar").val("cargar");
+                            }, 2000);
+                        },
+                        error: function () {
+                            $("#mensaje").html("<div class='alert alert-danger'>Error al guardar el cliente.</div>");
+                        }
+                    });
+                } else {
+                    $("#mensaje").html("<div class='alert alert-danger'>Error al verificar la cédula. Inténtelo nuevamente.</div>");
+                }
+            },
+            error: function () {
+                $("#mensaje").html("<div class='alert alert-danger'>Error al verificar la cédula. Inténtelo nuevamente.</div>");
             }
         });
     });
 
+    // Evento para eliminar un cliente
     $("#eliminaregistro").on("click", function () {
         var listar = $("#listar_eliminar").val();
         var pk = $("#idcliente_e").val();
@@ -153,21 +236,102 @@
             success: function (response) {
                 $("#mensaje").html(response);
                 rellenardatos();
+                $("#exampleModal").modal("hide"); // Cerrar el modal automáticamente
                 setTimeout(function () {
                     $("#mensaje").html("");
                 }, 2000);
+            },
+            error: function () {
+                $("#mensaje").html("<div class='alert alert-danger'>Error al eliminar el cliente.</div>");
             }
         });
     });
 
+    // Función para cargar datos en el modal de edición
     function rellenaredit(id, nombre, apellido, nacimiento, cedula, telefono, telurgencia) {
-        $("#idcliente").val(id);
-        $("#cli_nombres").val(nombre);
-        $("#cli_apellidos").val(apellido);
-        $("#cli_fechanacimiento").val(nacimiento);
-        $("#cli_cedula").val(cedula);
-        $("#cli_telefono").val(telefono);
-        $("#cli_telurgencia").val(telurgencia);
-        $("#listar").val("modificar");
+        $("#idcliente_m").val(id);
+        $("#cli_nombres_m").val(nombre);
+        $("#cli_apellidos_m").val(apellido);
+        $("#cli_fechanacimiento_m").val(nacimiento);
+        $("#cli_cedula_m").val(cedula);
+        $("#cli_telefono_m").val(telefono);
+        $("#cli_telurgencia_m").val(telurgencia);
+        $("#modalEditarCliente").modal("show");
     }
+
+    // Evento para guardar cambios desde el modal de edición
+    $("#guardar-editar-cliente").on("click", function () {
+        const cedula = $("#cli_cedula_m").val().trim();
+        const idCliente = $("#idcliente_m").val();
+        const nombre = $("#cli_nombres_m").val().trim();
+        const apellido = $("#cli_apellidos_m").val().trim();
+        const nacimiento = $("#cli_fechanacimiento_m").val().trim();
+        const telefono = $("#cli_telefono_m").val().trim();
+
+        // Validar campos obligatorios
+        if (!cedula || !nombre || !apellido || !nacimiento || !telefono) {
+            let mensaje = "<div class='alert alert-danger'>Faltan los siguientes campos obligatorios:<ul>";
+            if (!nombre)
+                mensaje += "<li>Nombre</li>";
+            if (!apellido)
+                mensaje += "<li>Apellido</li>";
+            if (!cedula)
+                mensaje += "<li>Cédula</li>";
+            if (!nacimiento)
+                mensaje += "<li>Fecha de Nacimiento</li>";
+            if (!telefono)
+                mensaje += "<li>Teléfono</li>";
+            mensaje += "</ul></div>";
+            $("#mensaje").html(mensaje);
+            return;
+        }
+
+        console.log("Datos para verificar duplicado de cédula:", {cedula, idCliente});
+
+        // Verificar duplicado de cédula, excluyendo el cliente actual
+        $.ajax({
+            url: 'jsp/clientesM.jsp',
+            type: 'post',
+            data: {listar: 'verificar_cedula', cli_cedula: cedula, idcliente: idCliente},
+            success: function (response) {
+                console.log("Respuesta de la verificación de cédula:", response.trim());
+
+                if (response.trim() === "duplicado") {
+                    $("#mensaje").html("<div class='alert alert-danger'>La cédula ya está registrada. Use una diferente.</div>");
+                } else if (response.trim() === "disponible") {
+                    // Proceder con la actualización
+                    const datos = $("#formEditarCliente").serialize();
+                    console.log("Datos enviados para modificar cliente:", datos);
+
+                    $.ajax({
+                        url: 'jsp/clientesM.jsp',
+                        type: 'POST',
+                        data: datos + '&listar=modificar',
+                        success: function (response) {
+                            console.log("Respuesta del servidor (Modificar):", response);
+                            $("#mensaje").html(response);
+                            rellenardatos(); // Recargar la tabla
+                            $("#modalEditarCliente").modal("hide"); // Cerrar modal
+                            setTimeout(() => $("#mensaje").html(""), 3000); // Limpiar mensajes después de 3 segundos
+                        },
+                        error: function () {
+                            $("#mensaje").html("<div class='alert alert-danger'>Error al guardar los cambios.</div>");
+                        }
+                    });
+                } else {
+                    $("#mensaje").html("<div class='alert alert-danger'>Error al verificar la cédula. Inténtelo nuevamente.</div>");
+                }
+            },
+            error: function () {
+                $("#mensaje").html("<div class='alert alert-danger'>Error al verificar la cédula. Inténtelo nuevamente.</div>");
+            }
+        });
+    });
+
+
+    // Limpiar mensajes al cerrar el modal
+    $('#modalEditarCliente').on('hidden.bs.modal', function () {
+        $("#mensaje").html("");
+    });
 </script>
+

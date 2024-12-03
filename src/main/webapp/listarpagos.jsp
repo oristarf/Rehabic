@@ -15,6 +15,7 @@
     <section class="content">
         <h1>Lista de pagos</h1>
         <button type="button" class="btn btn-primary" onclick="location.href = 'pagos.jsp'">Nuevo pago</button>
+        <button type="button" id="verVencimientos" class="btn btn-warning">Ver vencimientos</button>
         <table class="table">
             <thead>
                 <tr>
@@ -32,7 +33,20 @@
     </section>
 </div>
 
-</div>
+<h3 class="mt-4">Vencimientos</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Cliente</th>
+            <th scope="col">Fecha de Vencimiento</th>
+            <th scope="col">Estado</th>
+        </tr>
+    </thead>
+    <tbody id="resultadovencimientos">
+        <!-- Los vencimientos se cargarán aquí -->
+    </tbody>
+</table>
+
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -78,7 +92,7 @@
     $("#anulpago").click(function () {
         idpkpago = $("#pkanul").val();
         $.ajax({
-            data: {listar: 'anularpagos',idpkpago:idpkpago},
+            data: {listar: 'anularpagos', idpkpago: idpkpago},
             url: 'jsp/pagosM.jsp',
             type: 'post',
             beforeSend: function () {
@@ -91,5 +105,20 @@
             }
         });
     });
+    $("#verVencimientos").click(function () {
+        $.ajax({
+            data: {listar: 'listarVencimientos'},
+            url: 'jsp/pagosM.jsp',
+            type: 'post',
+            success: function (response) {
+                $("#resultadovencimientos").html(response); // Mostrar vencimientos en la tabla correspondiente
+            },
+            error: function () {
+                alert("Error al cargar los vencimientos.");
+            }
+        });
+    });
+
 </script>
+
 <%@include file="footer.jsp" %>

@@ -71,11 +71,22 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>Rehabic</title>
+        
+        <!-- Sweetalert2 -->
+        <link rel="stylesheet" href="css/sweetalert2.min.css">
+        <script src="js/sweetalert2.min.js"></script>
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+         
 
         <!-- Custom fonts and styles -->
         <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
         <link href="css/sb-admin-2.min.css" rel="stylesheet">
+        <link href="css/bootstrap-icons.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+        
+
 
         <style>
             .sidebar {

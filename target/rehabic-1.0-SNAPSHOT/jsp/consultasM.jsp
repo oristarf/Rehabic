@@ -1,48 +1,68 @@
 <%@include file="conexion.jsp"%>
 
-<%
-    String listar = request.getParameter("listar");
+<%    String listar = request.getParameter("listar");
 
     // Listar consultas
     if ("listar".equals(listar)) {
         try {
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(
-                "SELECT c.idconsulta, c.idcliente, cl.cli_nombres || ' ' || cl.cli_apellidos AS cliente, " +  // Asegúrate de incluir c.idcliente aquí
-                "c.fecha_consulta, c.medico_tratante, c.medico_tel, c.motivo_consulta, " +
-                "c.aea, c.estudios_complementarios, c.evaluacion_goniometria, " +
-                "c.pruebas_musculares, c.pruebas_especificas, c.impresion_diagnostica, " +
-                "c.plan_tratamiento " +
-                "FROM consultas c INNER JOIN clientes cl ON c.idcliente = cl.idcliente " +
-                "ORDER BY c.idconsulta ASC"
+                    "SELECT c.idconsulta, c.idcliente, cl.cli_nombres || ' ' || cl.cli_apellidos AS cliente, "
+                    + // Asegúrate de incluir c.idcliente aquí
+                    "c.fecha_consulta, c.medico_tratante, c.medico_tel, c.motivo_consulta, "
+                    + "c.aea, c.estudios_complementarios, c.evaluacion_goniometria, "
+                    + "c.pruebas_musculares, c.pruebas_especificas, c.impresion_diagnostica, "
+                    + "c.plan_tratamiento "
+                    + "FROM consultas c INNER JOIN clientes cl ON c.idcliente = cl.idcliente "
+                    + "ORDER BY c.idconsulta ASC"
             );
 
             while (rs.next()) {
 %>
 <tr>
-    <td><%= rs.getInt("idconsulta") %></td>
-    <td><%= rs.getString("cliente") %></td>
-    <td><%= rs.getDate("fecha_consulta") %></td>
-    <td><%= rs.getString("medico_tratante") %></td>
-    <td><%= rs.getString("medico_tel") %></td>
-    <td><%= rs.getString("motivo_consulta") %></td>
-    <td><%= rs.getString("aea") %></td>
-    <td><%= rs.getString("estudios_complementarios") %></td>
-    <td><%= rs.getString("evaluacion_goniometria") %></td>
-    <td><%= rs.getString("pruebas_musculares") %></td>
-    <td><%= rs.getString("pruebas_especificas") %></td>
-    <td><%= rs.getString("impresion_diagnostica") %></td>
-    <td><%= rs.getString("plan_tratamiento") %></td>
+    <td><%= rs.getInt("idconsulta")%></td>
+    <td><%= rs.getString("cliente")%></td>
+    <td><%= rs.getDate("fecha_consulta")%></td>
+    <td><%= rs.getString("medico_tratante")%></td>
+    <td><%= rs.getString("medico_tel")%></td>
+    <td><%= rs.getString("motivo_consulta")%></td>
+    <td><%= rs.getString("aea")%></td>
+    <td><%= rs.getString("estudios_complementarios")%></td>
+    <td><%= rs.getString("evaluacion_goniometria")%></td>
+    <td><%= rs.getString("pruebas_musculares")%></td>
+    <td><%= rs.getString("pruebas_especificas")%></td>
+    <td><%= rs.getString("impresion_diagnostica")%></td>
+    <td><%= rs.getString("plan_tratamiento")%></td>
     <td>
-        <i title="modificar" class="bi bi-pencil-square" onclick="rellenaredit('<%= rs.getInt("idconsulta") %>', '<%= rs.getInt("idcliente") %>', '<%= rs.getDate("fecha_consulta") %>', '<%= rs.getString("medico_tratante") %>', '<%= rs.getString("medico_tel") %>', '<%= rs.getString("motivo_consulta") %>', '<%= rs.getString("aea") %>', '<%= rs.getString("estudios_complementarios") %>', '<%= rs.getString("evaluacion_goniometria") %>', '<%= rs.getString("pruebas_musculares") %>', '<%= rs.getString("pruebas_especificas") %>', '<%= rs.getString("impresion_diagnostica") %>', '<%= rs.getString("plan_tratamiento") %>')"></i>
-        <i title="eliminar" class="bi bi-trash" onclick="$('#idconsulta_e').val('<%= rs.getInt("idconsulta") %>')" data-bs-toggle="modal" data-bs-target="#eliminarC"></i>
+        <i title="modificar" class="bi bi-pencil-square" 
+           onclick="rellenaredit('<%= rs.getInt("idconsulta")%>',
+                           '<%= rs.getInt("idcliente")%>',
+                           '<%= rs.getDate("fecha_consulta")%>',
+                           '<%= rs.getString("medico_tratante")%>',
+                           '<%= rs.getString("medico_tel")%>',
+                           '<%= rs.getString("motivo_consulta")%>',
+                           '<%= rs.getString("aea")%>',
+                           '<%= rs.getString("estudios_complementarios")%>',
+                           '<%= rs.getString("evaluacion_goniometria")%>',
+                           '<%= rs.getString("pruebas_musculares")%>',
+                           '<%= rs.getString("pruebas_especificas")%>',
+                           '<%= rs.getString("impresion_diagnostica")%>',
+                           '<%= rs.getString("plan_tratamiento")%>')">
+        </i>
+
+        <i title="Eliminar" 
+           class="bi bi-trash" 
+           onclick="abrirModalEliminar(<%= rs.getInt("idconsulta")%>)" 
+           data-bs-toggle="modal" 
+           data-bs-target="#modalEliminarConsulta"></i>
+
     </td>
 </tr>
 <%
-            }
-        } catch (Exception e) {
-            out.print("<div class='alert alert-danger'>Error al listar: " + e.getMessage() + "</div>");
         }
+    } catch (Exception e) {
+        out.print("<div class='alert alert-danger'>Error al listar: " + e.getMessage() + "</div>");
+    }
 } // Guardar nueva consulta
 else if ("cargar".equals(listar)) {
     String idcliente = request.getParameter("idcliente");
@@ -77,53 +97,76 @@ else if ("cargar".equals(listar)) {
     }
 } // Modificar consulta
 else if ("modificar".equals(listar)) {
+    // Recuperar parámetros
     String idconsulta = request.getParameter("idconsulta");
     String idcliente = request.getParameter("idcliente");
     String fechaConsulta = request.getParameter("fecha_consulta");
-    String medicoTratante = request.getParameter("medico_tratante").replace("'", "''");
-    String medicoTel = request.getParameter("medico_tel").replace("'", "''");
-    String motivoConsulta = request.getParameter("motivo_consulta").replace("'", "''");
-    String aea = request.getParameter("aea").replace("'", "''");
-    String estudiosComplementarios = request.getParameter("estudios_complementarios").replace("'", "''");
-    String evaluacionGoniometria = request.getParameter("evaluacion_goniometria").replace("'", "''");
-    String pruebasMusculares = request.getParameter("pruebas_musculares").replace("'", "''");
-    String pruebasEspecificas = request.getParameter("pruebas_especificas").replace("'", "''");
-    String impresionDiagnostica = request.getParameter("impresion_diagnostica").replace("'", "''");
-    String planTratamiento = request.getParameter("plan_tratamiento").replace("'", "''");
+    String motivoConsulta = request.getParameter("motivo_consulta");
+    String planTratamiento = request.getParameter("plan_tratamiento");
+
+    // Opcionales
+    String medicoTratante = request.getParameter("medico_tratante");
+    String medicoTel = request.getParameter("medico_tel");
+    String aea = request.getParameter("aea");
+    String estudiosComplementarios = request.getParameter("estudios_complementarios");
+    String evaluacionGoniometria = request.getParameter("evaluacion_goniometria");
+    String pruebasMusculares = request.getParameter("pruebas_musculares");
+    String pruebasEspecificas = request.getParameter("pruebas_especificas");
+    String impresionDiagnostica = request.getParameter("impresion_diagnostica");
+
+    // Validación de campos obligatorios
+    if (idconsulta == null || idconsulta.trim().isEmpty()
+            || idcliente == null || idcliente.trim().isEmpty()
+            || fechaConsulta == null || fechaConsulta.trim().isEmpty()
+            || motivoConsulta == null || motivoConsulta.trim().isEmpty()
+            || planTratamiento == null || planTratamiento.trim().isEmpty()) {
+        out.print("<div class='alert alert-danger'>Error: Todos los campos obligatorios deben completarse.</div>");
+        return;
+    }
 
     try {
+        // Crear consulta SQL con StringBuilder
+        StringBuilder query = new StringBuilder("UPDATE consultas SET ");
+        query.append("idcliente = ").append(idcliente).append(", ");
+        query.append("fecha_consulta = '").append(fechaConsulta.replace("'", "''")).append("', ");
+        query.append("motivo_consulta = '").append(motivoConsulta.replace("'", "''")).append("', ");
+        query.append("plan_tratamiento = '").append(planTratamiento.replace("'", "''")).append("'");
+
+        // Manejar los campos opcionales
+        if (medicoTratante != null && !medicoTratante.trim().isEmpty()) {
+            query.append(", medico_tratante = '").append(medicoTratante.replace("'", "''")).append("'");
+        }
+        if (medicoTel != null && !medicoTel.trim().isEmpty()) {
+            query.append(", medico_tel = '").append(medicoTel.replace("'", "''")).append("'");
+        }
+        if (aea != null && !aea.trim().isEmpty()) {
+            query.append(", aea = '").append(aea.replace("'", "''")).append("'");
+        }
+        if (estudiosComplementarios != null && !estudiosComplementarios.trim().isEmpty()) {
+            query.append(", estudios_complementarios = '").append(estudiosComplementarios.replace("'", "''")).append("'");
+        }
+        if (evaluacionGoniometria != null && !evaluacionGoniometria.trim().isEmpty()) {
+            query.append(", evaluacion_goniometria = '").append(evaluacionGoniometria.replace("'", "''")).append("'");
+        }
+        if (pruebasMusculares != null && !pruebasMusculares.trim().isEmpty()) {
+            query.append(", pruebas_musculares = '").append(pruebasMusculares.replace("'", "''")).append("'");
+        }
+        if (pruebasEspecificas != null && !pruebasEspecificas.trim().isEmpty()) {
+            query.append(", pruebas_especificas = '").append(pruebasEspecificas.replace("'", "''")).append("'");
+        }
+        if (impresionDiagnostica != null && !impresionDiagnostica.trim().isEmpty()) {
+            query.append(", impresion_diagnostica = '").append(impresionDiagnostica.replace("'", "''")).append("'");
+        }
+
+        // Agregar la condición WHERE
+        query.append(" WHERE idconsulta = ").append(idconsulta);
+
+        // Ejecutar la consulta
         Statement st = conn.createStatement();
-        String query = "UPDATE consultas SET idcliente = " + idcliente + ", fecha_consulta = '" + fechaConsulta + "', "
-                + "medico_tratante = '" + medicoTratante + "', medico_tel = '" + medicoTel + "', "
-                + "motivo_consulta = '" + motivoConsulta + "', aea = '" + aea + "', "
-                + "estudios_complementarios = '" + estudiosComplementarios + "', evaluacion_goniometria = '" + evaluacionGoniometria + "', "
-                + "pruebas_musculares = '" + pruebasMusculares + "', pruebas_especificas = '" + pruebasEspecificas + "', "
-                + "impresion_diagnostica = '" + impresionDiagnostica + "', plan_tratamiento = '" + planTratamiento + "' "
-                + "WHERE idconsulta = " + idconsulta;
-        st.executeUpdate(query);
+        st.executeUpdate(query.toString());
         out.print("<div class='alert alert-success'>Consulta modificada exitosamente.</div>");
     } catch (Exception e) {
         out.print("<div class='alert alert-danger'>Error al modificar: " + e.getMessage() + "</div>");
-    }
-} // Eliminar consulta
-else if ("eliminar".equals(listar)) {
-    String idconsulta = request.getParameter("idconsulta_e");
-
-    try {
-        // Verificar si la consulta tiene evaluaciones asociadas en cabecera_evaluaciones
-        Statement st = conn.createStatement();
-        ResultSet rs = st.executeQuery("SELECT COUNT(*) AS count FROM cabecera_evaluaciones WHERE idconsulta = " + idconsulta);
-
-        if (rs.next() && rs.getInt("count") > 0) {
-            // Si existen evaluaciones asociadas, mostrar advertencia y no eliminar
-            out.print("<div class='alert alert-warning'>No se puede eliminar esta consulta porque tiene evaluaciones asociadas.</div>");
-        } else {
-            // Si no hay evaluaciones asociadas, proceder con la eliminación
-            st.executeUpdate("DELETE FROM consultas WHERE idconsulta = " + idconsulta);
-            out.print("<div class='alert alert-success'>Consulta eliminada exitosamente.</div>");
-        }
-    } catch (Exception e) {
-        out.print("<div class='alert alert-danger'>Error al eliminar: " + e.getMessage() + "</div>");
     }
 } // Buscar clientes para la lista de selección
 else if ("buscar_cliente".equals(listar)) {
@@ -138,13 +181,25 @@ else if ("buscar_cliente".equals(listar)) {
             while (rs.next()) {
 %>
 <a href="#" class="list-group-item list-group-item-action cliente-item" data-id="<%= rs.getInt("idcliente")%>">
-    <%= rs.getString("cliente_nombre")%>
+    <%= rs.getString("cliente_nombre").trim()%>
 </a>
+
 <%
                 }
             } catch (Exception e) {
                 out.print("<div class='alert alert-danger'>Error en la búsqueda: " + e.getMessage() + "</div>");
             }
         }
+    } else if ("eliminar".equals(listar)) {
+        String idconsulta = request.getParameter("idconsulta_e");
+
+        try {
+            Statement st = conn.createStatement();
+            st.executeUpdate("DELETE FROM consultas WHERE idconsulta = " + idconsulta);
+            out.print("<div class='alert alert-success'>Consulta eliminada exitosamente.</div>");
+        } catch (Exception e) {
+            out.print("<div class='alert alert-danger'>Error al eliminar: " + e.getMessage() + "</div>");
+        }
     }
+
 %>

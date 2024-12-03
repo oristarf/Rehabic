@@ -24,18 +24,7 @@
                     <h5>DATOS DEL PACIENTE
 
                     </h5>
-                    <!-- First Action -->
-
-
-                    <!-- First Action -->
-
-
-                    <!-- First Action -->
-
-
-                    <!-- Second Action -->
-
-
+                    
                     <div class="form-group">
                         <label for="idcliente" class="control-label">Paciente</label>
 
