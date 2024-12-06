@@ -11,6 +11,23 @@
     String user = request.getParameter("usuario");
     String password = request.getParameter("usu_clave");
 
+    // Si planeas encriptar contraseñas, puedes descomentar las siguientes líneas
+    /*
+    try {
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        byte[] hash = md.digest(password.getBytes("UTF-8"));
+        BigInteger number = new BigInteger(1, hash);
+        password = number.toString(16); // Convierte el hash a hexadecimal
+        while (password.length() < 32) {
+            password = "0" + password;
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        out.println("<div class='alert alert-danger'>Error al encriptar contraseña.</div>");
+        return;
+    }
+    */
+
     // Creamos la sesión para almacenar datos si el inicio de sesión es exitoso
     HttpSession sesion = request.getSession();
 
@@ -29,11 +46,12 @@
         if (rs.next()) {
             String rol = rs.getString("rol");
             int roleId = rs.getInt("idroles");
+            int idUsuario = rs.getInt("idusuarios");
 
             // Guardamos los datos del usuario en sesión
             sesion.setAttribute("logueado", "1");
             sesion.setAttribute("user", rs.getString("usuario"));
-            sesion.setAttribute("idusuarios", rs.getString("idusuarios"));
+            sesion.setAttribute("idusuarios", idUsuario);
             sesion.setAttribute("rol", rol);
             sesion.setAttribute("role_id", roleId);
 
@@ -62,5 +80,6 @@
         }
     } catch (Exception e) {
         e.printStackTrace();
+        out.println("<div class='alert alert-danger'>Error en la conexión o consulta.</div>");
     }
 %>

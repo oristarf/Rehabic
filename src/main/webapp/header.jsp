@@ -33,7 +33,7 @@
         permisoRequerido = "Consultas";
     } else if (uri.contains("historial.jsp")) {
         permisoRequerido = "Historial";
-    } else if (uri.contains("asistencia.jsp")) {
+    } else if (uri.contains("asistencias.jsp")) {
         permisoRequerido = "Asistencia";
     } else if (uri.contains("servicios.jsp")) {
         permisoRequerido = "Servicios";
@@ -41,16 +41,23 @@
         permisoRequerido = "Ejercicios";
     } else if (uri.contains("pagos.jsp")) {
         permisoRequerido = "Pagos";
-    } else if (uri.contains("mensualidades.jsp")) {
-        permisoRequerido = "Mensualidades";
     } else if (uri.contains("listarpagos.jsp")) {
         permisoRequerido = "Listar_Pagos";
     } else if (uri.contains("evaluaciones.jsp")) {
         permisoRequerido = "Evaluaciones_Generales";
     } else if (uri.contains("acl_evaluaciones.jsp")) {
         permisoRequerido = "Evaluaciones_ACL";
-    }
-
+    } else if (uri.contains("rutinas.jsp")) {
+        permisoRequerido = "Rutinas";
+    } else if (uri.contains("listarrutinas.jsp")) {
+        permisoRequerido = "Listar_Rutinas";
+    } else if (uri.contains("personales.jsp")) {
+        permisoRequerido = "Personales";
+    }else if (uri.contains("verRutinas.jsp")) {
+        permisoRequerido = "Ver_Rutinas";
+    }else if (uri.contains("controlRutinas.jsp")) {
+        permisoRequerido = "Control_Rutinas";
+}
     // Validar acceso basado en los permisos de la sesión
     if (permisoRequerido != null && (permisos == null || !permisos.contains(permisoRequerido))) {
 %>
@@ -71,21 +78,21 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>Rehabic</title>
-        
+
         <!-- Sweetalert2 -->
         <link rel="stylesheet" href="css/sweetalert2.min.css">
         <script src="js/sweetalert2.min.js"></script>
 
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-         
+
 
         <!-- Custom fonts and styles -->
         <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
         <link href="css/sb-admin-2.min.css" rel="stylesheet">
         <link href="css/bootstrap-icons.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-        
+
 
 
         <style>
@@ -233,7 +240,7 @@
                             <li><a class="nav-link collapse-item" href="historial.jsp">Historial</a></li>
                                 <% } %>
                                 <% if (permisos.contains("Asistencia")) { %>
-                            <li><a class="nav-link collapse-item" href="asistencia.jsp">Asistencia</a></li>
+                            <li><a class="nav-link collapse-item" href="asistencias.jsp">Asistencia</a></li>
                                 <% } %>
                         </ul>
                     </div>
@@ -248,6 +255,7 @@
                     boolean tienePermisoAdministrar
                             = permisos != null && (permisos.contains("Roles")
                             || permisos.contains("Usuarios")
+                            || permisos.contains("Personales")
                             || permisos.contains("Servicios")
                             || permisos.contains("Ejercicios"));
                 %>
@@ -267,6 +275,9 @@
                                 <% if (permisos.contains("Usuarios")) { %>
                             <li><a class="nav-link collapse-item" href="usuarios.jsp">Usuarios</a></li>
                                 <% } %>
+                                <% if (permisos.contains("Personales")) { %>
+                            <li><a class="nav-link collapse-item" href="personales.jsp">Personales</a></li>
+                                <% } %>
                                 <% if (permisos.contains("Servicios")) { %>
                             <li><a class="nav-link collapse-item" href="servicios.jsp">Servicios</a></li>
                                 <% } %>
@@ -285,7 +296,6 @@
                 <%
                     boolean tienePermisoPagos
                             = permisos != null && (permisos.contains("Pagos")
-                            || permisos.contains("Mensualidades")
                             || permisos.contains("Listar_Pagos"));
                 %>
 
@@ -301,9 +311,6 @@
                             <% if (permisos.contains("Pagos")) { %>
                             <li><a class="nav-link collapse-item" href="pagos.jsp">Nuevo pago</a></li>
                                 <% } %>
-                                <% if (permisos.contains("Mensualidades")) { %>
-                            <li><a class="nav-link collapse-item" href="mensualidades.jsp">Mensualidades</a></li>
-                                <% } %>
                                 <% if (permisos.contains("Listar_Pagos")) { %>
                             <li><a class="nav-link collapse-item" href="listarpagos.jsp">Lista de pagos</a></li>
                                 <% } %>
@@ -314,7 +321,42 @@
 
                 <!-- Divider -->
 
+                <!-- Rutinas Section -->
+                <%
+                    boolean tienePermisoRutinas
+                            = permisos != null && (permisos.contains("Rutinas")
+                            || permisos.contains("Listar_Rutinas")
+                            || permisos.contains("Ver_Rutinas")
+                            || permisos.contains("Control_Rutinas"));
+                %>
 
+                <% if (tienePermisoRutinas) { %>
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseRutinas"
+                       aria-expanded="true" aria-controls="collapseRutinas">
+                        <i class="fas fa-running"></i>
+                        <span>Rutinas</span>
+                    </a>
+                    <div id="collapseRutinas" class="collapse" aria-labelledby="headingRutinas" data-parent="#accordionSidebar">
+                        <ul class="navbar-nav">
+                            <% if (permisos.contains("Rutinas")) { %>
+                            <li><a class="nav-link collapse-item" href="rutinas.jsp">Nueva rutina</a></li>
+                                <% } %>
+                                <% if (permisos.contains("Listar_Rutinas")) { %>
+                            <li><a class="nav-link collapse-item" href="listarrutinas.jsp">Lista de rutinas</a></li>
+                                <% } %>
+                            <% if (permisos.contains("Ver_Rutinas")) { %>
+                            <li><a class="nav-link collapse-item" href="verRutinas.jsp">Ver rutinas</a></li>
+                                <% } %>
+                            <% if (permisos.contains("Control_Rutinas")) { %>
+                            <li><a class="nav-link collapse-item" href="controlRutinas.jsp">Seguimiento rutinas</a></li>
+                                <% } %>
+                        </ul>
+                    </div>
+                </li>
+                <% } %>
+
+                <!-- Divider -->
                 <!-- Evaluaciones Section -->
                 <%
                     boolean tienePermisoEvaluaciones

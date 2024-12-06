@@ -105,19 +105,23 @@
             }
         });
     });
-    $("#verVencimientos").click(function () {
-        $.ajax({
-            data: {listar: 'listarVencimientos'},
-            url: 'jsp/pagosM.jsp',
-            type: 'post',
-            success: function (response) {
-                $("#resultadovencimientos").html(response); // Mostrar vencimientos en la tabla correspondiente
-            },
-            error: function () {
-                alert("Error al cargar los vencimientos.");
-            }
-        });
+  $("#verVencimientos").click(function () {
+    const idUsuario = '<%= sesion.getAttribute("idusuarios") %>'; // Obtener ID del usuario desde la sesión
+
+    $.ajax({
+        data: { listar: 'listarVencimientos', idusuario: idUsuario },
+        url: 'jsp/pagosM.jsp',
+        type: 'post',
+        success: function (response) {
+            console.log("Respuesta de vencimientos:", response); // Log para depuración
+            $("#resultadovencimientos").html(response); // Mostrar vencimientos en la tabla correspondiente
+        },
+        error: function () {
+            alert("Error al cargar los vencimientos.");
+        }
     });
+});
+
 
 </script>
 

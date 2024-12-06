@@ -108,25 +108,27 @@
     });
 
    function cargarNotificacionesVencimientos() {
+    const idUsuario = '<%= sesion.getAttribute("idusuarios") %>'; // Obtener ID del usuario desde la sesión
+
     $.ajax({
-        data: { listar: 'notificacionesVencimientos' },
+        data: { listar: 'notificacionesVencimientos', idusuario: idUsuario },
         url: 'jsp/pagosM.jsp',
         type: 'post',
         success: function (response) {
-            console.log("Respuesta del servidor:", response); // Depuración de la respuesta del backend
+            console.log("Respuesta del servidor:", response);
 
             if (response.trim() !== "") {
                 let datos = response.trim().split("|");
 
                 // Limpieza de valores antes de convertir
-                let proximosRaw = datos[0].trim().replace(/[^0-9]/g, ""); // Elimina caracteres no numéricos
-                let vencidosRaw = datos[1].trim().replace(/[^0-9]/g, ""); // Elimina caracteres no numéricos
+                let proximosRaw = datos[0].trim().replace(/[^0-9]/g, ""); 
+                let vencidosRaw = datos[1].trim().replace(/[^0-9]/g, ""); 
 
-                let proximos = parseInt(proximosRaw, 10) || 0; // Convierte a entero con valor por defecto 0
+                let proximos = parseInt(proximosRaw, 10) || 0;
                 let vencidos = parseInt(vencidosRaw, 10) || 0;
 
-                console.log("Próximos vencimientos procesados:", proximos); // Depuración de "próximos"
-                console.log("Pagos vencidos procesados:", vencidos);       // Depuración de "vencidos"
+                console.log("Próximos vencimientos procesados:", proximos);
+                console.log("Pagos vencidos procesados:", vencidos);
 
                 // Actualizar la interfaz
                 $("#proximosPagos").text(proximos);
@@ -161,6 +163,7 @@
         }
     });
 }
+
 
 </script>
 
