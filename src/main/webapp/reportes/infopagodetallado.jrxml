@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="bf3b472b-33bf-412d-a9c0-a696279236c8">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="fecha_ini" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fecha_fin" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="idcliente" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT 
+    cp.idcab_pago AS id_cabecera,
+    TO_CHAR(cp.fecha, 'DD-MM-YYYY') AS fecha_cabecera,
+    CONCAT(c.cli_nombres, ' ', c.cli_apellidos) AS nombre_cliente,
+	c.cli_cedula AS cedula_cliente,
+    cp.total AS total,
+	cp.metodo_pago AS metodo_pago,
+    TO_CHAR(cp.fecha, 'DD-MM-YYYY') AS fecha_inicio,
+    TO_CHAR(cp.fecha, 'DD-MM-YYYY') AS fecha_fin,
+	CASE 
+        WHEN cp.fecha_vencimiento IS NOT NULL THEN TO_CHAR(cp.fecha_vencimiento, 'DD-MM-YYYY')
+        ELSE 'NO TIENE'
+    END AS fecha_vencimiento,
+    s.ser_nombre AS servicio,
+    dp.det_cantidad AS cantidad,
+    dp.det_precio AS precio_unitario
+FROM 
+    cab_pago cp
+	JOIN 
+    det_pago dp ON cp.idcab_pago = dp.idcab_pago
+	JOIN 
+    servicios s ON dp.idservicio = s.idservicio
+JOIN 
+    clientes c ON cp.idcliente = c.idcliente
+WHERE 
+    cp.fecha BETWEEN $P{fecha_ini} AND $P{fecha_fin}
+    AND (COALESCE(1, 0) = 0 OR c.idcliente = $P{idcliente})
+ORDER BY 
+    cp.fecha DESC;]]>
+	</queryString>
+	<field name="id_cabecera" class="java.lang.Integer"/>
+	<field name="fecha_cabecera" class="java.lang.String"/>
+	<field name="nombre_cliente" class="java.lang.String"/>
+	<field name="cedula_cliente" class="java.lang.String"/>
+	<field name="total" class="java.lang.Integer"/>
+	<field name="metodo_pago" class="java.lang.String"/>
+	<field name="fecha_inicio" class="java.lang.String"/>
+	<field name="fecha_fin" class="java.lang.String"/>
+	<field name="fecha_vencimiento" class="java.lang.String"/>
+	<field name="servicio" class="java.lang.String"/>
+	<field name="cantidad" class="java.lang.Integer"/>
+	<field name="precio_unitario" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="78" splitType="Stretch">
+			<staticText>
+				<reportElement x="17" y="13" width="92" height="33" uuid="ef5b8004-5b8a-465b-9ebd-b0b1a8c8ee51"/>
+				<textElement>
+					<font size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PAGOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="167" y="13" width="30" height="20" uuid="3373e7a3-6a66-4f02-b708-3bc8479a4d1a"/>
+				<text><![CDATA[DE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="339" y="13" width="47" height="20" uuid="75fd592e-357c-473e-a558-2084b3a7cb45"/>
+				<text><![CDATA[HASTA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="167" y="46" width="100" height="20" uuid="37b1f4c4-c380-47a2-98fa-2cc0602cdfe2"/>
+				<text><![CDATA[CLIENTE]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="212" y="13" width="100" height="20" uuid="f6c89168-d236-4d17-8857-3d3f9c57bd16"/>
+				<textFieldExpression><![CDATA[$F{fecha_inicio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="398" y="13" width="100" height="20" uuid="f28a8fba-fc6f-4e3a-a707-237fa2cd5dee"/>
+				<textFieldExpression><![CDATA[$F{fecha_fin}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="286" y="46" width="100" height="20" uuid="9adc28eb-56c2-40e2-af77-3a866e916667"/>
+				<textFieldExpression><![CDATA[$F{nombre_cliente}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="51"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="26" splitType="Stretch">
+			<staticText>
+				<reportElement x="17" y="0" width="41" height="20" uuid="ea5dbe9e-1e25-404f-9b0d-9c19018929fe"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="67" y="0" width="100" height="20" uuid="840c138c-1387-4093-962c-86b98044c7f0"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="167" y="0" width="100" height="20" uuid="961b48f1-57cd-4e09-b977-966eea455a20"/>
+				<text><![CDATA[metodo_pago]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="298" y="0" width="100" height="20" uuid="9cc8d54b-8d1e-4b34-b0e6-84c935b43de8"/>
+				<text><![CDATA[fecha_vencimiento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="421" y="0" width="100" height="20" uuid="30b60095-e4b6-469c-a4d1-68b065c43dbc"/>
+				<text><![CDATA[servicio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="539" y="0" width="48" height="20" uuid="b8ce7739-88c7-4fbe-9a09-d0b3c2f2fc08"/>
+				<text><![CDATA[cantidad]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="620" y="0" width="100" height="20" uuid="38d77064-e0b5-4c91-9591-77be8b690d4c"/>
+				<text><![CDATA[precio_unitario]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="736" y="0" width="49" height="20" uuid="1a3f66bf-54f3-4d3f-a511-f30ea4c49b4c"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[total]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="34" splitType="Stretch">
+			<textField>
+				<reportElement x="17" y="0" width="17" height="20" uuid="9028d9a9-0160-4d12-98da-7347fd899ea9"/>
+				<textFieldExpression><![CDATA[$F{id_cabecera}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="67" y="0" width="100" height="20" uuid="8443cfa9-a6ca-479d-9bc8-8e7d401e217a"/>
+				<textFieldExpression><![CDATA[$F{fecha_cabecera}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="736" y="0" width="66" height="20" uuid="f77023ba-0b12-4900-b916-39ae89d47d50"/>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="167" y="0" width="100" height="20" uuid="39f47e3d-0e67-4378-a61f-1d22ae34f1b9"/>
+				<textFieldExpression><![CDATA[$F{metodo_pago}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="298" y="0" width="100" height="20" uuid="b872010f-23a7-4b70-b7c9-1395eaf2a993"/>
+				<textFieldExpression><![CDATA[$F{fecha_vencimiento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="421" y="0" width="100" height="20" uuid="a0071e1c-a957-4091-a08f-3f3274472f32"/>
+				<textFieldExpression><![CDATA[$F{servicio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="539" y="0" width="31" height="20" uuid="df05fc04-33c8-48c5-91bb-9c30619b78f2"/>
+				<textFieldExpression><![CDATA[$F{cantidad}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="620" y="0" width="100" height="20" uuid="fd7ea070-c17f-4389-809e-888c43bc16ed"/>
+				<textFieldExpression><![CDATA[$F{precio_unitario}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

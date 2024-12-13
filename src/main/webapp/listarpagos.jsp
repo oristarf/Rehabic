@@ -16,6 +16,8 @@
         <h1>Lista de pagos</h1>
         <button type="button" class="btn btn-primary" onclick="location.href = 'pagos.jsp'">Nuevo pago</button>
         <button type="button" id="verVencimientos" class="btn btn-warning">Ver vencimientos</button>
+
+      
         <table class="table">
             <thead>
                 <tr>
@@ -105,24 +107,23 @@
             }
         });
     });
-  $("#verVencimientos").click(function () {
-    const idUsuario = '<%= sesion.getAttribute("idusuarios") %>'; // Obtener ID del usuario desde la sesión
+    $("#verVencimientos").click(function () {
+        const idUsuario = '<%= sesion.getAttribute("idusuarios")%>'; // Obtener ID del usuario desde la sesión
 
-    $.ajax({
-        data: { listar: 'listarVencimientos', idusuario: idUsuario },
-        url: 'jsp/pagosM.jsp',
-        type: 'post',
-        success: function (response) {
-            console.log("Respuesta de vencimientos:", response); // Log para depuración
-            $("#resultadovencimientos").html(response); // Mostrar vencimientos en la tabla correspondiente
-        },
-        error: function () {
-            alert("Error al cargar los vencimientos.");
-        }
+        $.ajax({
+            data: {listar: 'listarVencimientos', idusuario: idUsuario},
+            url: 'jsp/pagosM.jsp',
+            type: 'post',
+            success: function (response) {
+                console.log("Respuesta de vencimientos:", response); // Log para depuración
+                $("#resultadovencimientos").html(response); // Mostrar vencimientos en la tabla correspondiente
+            },
+            error: function () {
+                alert("Error al cargar los vencimientos.");
+            }
+        });
     });
-});
-
-
+   
 </script>
 
 <%@include file="footer.jsp" %>

@@ -53,11 +53,21 @@
         permisoRequerido = "Listar_Rutinas";
     } else if (uri.contains("personales.jsp")) {
         permisoRequerido = "Personales";
-    }else if (uri.contains("verRutinas.jsp")) {
+    } else if (uri.contains("verRutinas.jsp")) {
         permisoRequerido = "Ver_Rutinas";
-    }else if (uri.contains("controlRutinas.jsp")) {
+    } else if (uri.contains("controlRutinas.jsp")) {
         permisoRequerido = "Control_Rutinas";
-}
+    }else if (uri.contains("informepago_vista.jsp")) {
+        permisoRequerido = "Informe Pagos General";
+    }else if (uri.contains("informepagodetallado_vista.jsp")) {
+        permisoRequerido = "Informe Pago Cliente";
+    }else if (uri.contains("informerutinadetallada_vista.jsp")) {
+        permisoRequerido = "Informe Rutina Cliente";
+    }else if (uri.contains("informe_acl_detvista.jsp")) {
+        permisoRequerido = "Informe ACL Cliente";
+    }else if (uri.contains("informe_eva_detvista.jsp")) {
+        permisoRequerido = "Informe Evaluacion Cliente";
+    }
     // Validar acceso basado en los permisos de la sesión
     if (permisoRequerido != null && (permisos == null || !permisos.contains(permisoRequerido))) {
 %>
@@ -96,99 +106,124 @@
 
 
         <style>
-            .sidebar {
-                background: linear-gradient(135deg, #10243c 30%, #17a2b8 90%);
-            }
+    .sidebar {
+        background: linear-gradient(135deg, #10243c 30%, #17a2b8 90%);
+    }
 
-            .sidebar-brand {
-                font-size: 1.5rem;
-                font-weight: 600;
-                color: #ffffff;
-            }
+    .sidebar-brand {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #ffffff;
+    }
 
-            .sidebar .nav-item .nav-link {
-                color: #e9ecef;
-            }
+    .sidebar .nav-item .nav-link {
+        color: #e9ecef;
+    }
 
-            .sidebar .nav-item .nav-link:hover {
-                color: #17a2b8;
-                background-color: rgba(255, 255, 255, 0.2);
-                border-radius: 5px;
-            }
+    .sidebar .nav-item .nav-link:hover {
+        color: #17a2b8;
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 5px;
+    }
 
-            #content-wrapper {
-                background-color: #f8f9fa;
-            }
+    #content-wrapper {
+        background-color: #f8f9fa;
+    }
 
-            .card-header {
-                background-color: #17a2b8;
-                color: white;
-                font-size: 1.3rem;
-                font-weight: bold;
-            }
+    .card-header {
+        background-color: #17a2b8;
+        color: white;
+        font-size: 1.3rem;
+        font-weight: bold;
+    }
 
-            .btn-primary {
-                background-color: #17a2b8;
-                border: none;
-            }
+    .btn-primary {
+        background-color: #17a2b8;
+        border: none;
+    }
 
-            .btn-primary:hover {
-                background-color: #138496;
-            }
+    .btn-primary:hover {
+        background-color: #138496;
+    }
 
-            .navbar .nav-link {
-                color: #495057 !important;
-            }
+    .navbar .nav-link {
+        color: #495057 !important;
+    }
 
-            .container-fluid {
-                max-width: 1200px;
-            }
+    .container-fluid {
+        max-width: 1200px;
+    }
 
-            .sidebar-divider {
-                border-top: 1px solid rgba(255, 255, 255, 0.2);
-            }
+    .sidebar-divider {
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
 
-            .dropdown-item i {
-                color: #17a2b8;
-            }
+    .dropdown-item i {
+        color: #17a2b8;
+    }
 
-            /* Custom style for dropdown items */
-            .collapse-item {
-                color: #e9ecef;
-                padding: 10px 20px;
-                font-size: 0.9rem;
-                display: block;
-            }
+    /* Custom style for dropdown items */
+    .collapse-item {
+        color: #e9ecef;
+        padding: 10px 20px;
+        font-size: 0.9rem;
+        display: block;
+    }
 
-            .collapse-item:hover {
-                color: #17a2b8;
-                background: rgba(255, 255, 255, 0.2);
-                border-radius: 4px;
-            }
+    .collapse-item:hover {
+        color: #17a2b8;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 4px;
+    }
 
-            /* Arrow indicator for collapsed nav-link */
-            .nav-link.collapsed::after {
-                content: '\f078';
-                font-family: "FontAwesome";
-                float: right;
-            }
+    /* Arrow indicator for collapsed nav-link */
+    .nav-link.collapsed::after {
+        content: '\f078';
+        font-family: "FontAwesome";
+        float: right;
+    }
 
-            .nav-item:hover .collapse {
-                display: block !important;
-            }
+    .checkbox-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Ajusta el tamaño de las columnas */
+        gap: 10px; /* Espaciado entre elementos */
+    }
 
-            .nav-link.collapsed::after {
-                content: '\f078';
-                font-family: "FontAwesome";
-                float: right;
-            }
-        </style>
+    .checkbox-grid label {
+        display: flex;
+        align-items: center;
+    }
+
+    /* Fondo destacado para elementos desplegados en pantallas pequeñas */
+    .collapse.show {
+     background : linear-gradient(135deg, #10243c 30%, #17a2b8 90%);
+    color: #000000; /* Texto negro */
+    border: 1px solid rgba(0, 0, 0, 0.1); /* Borde sutil */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Sombra más marcada */
+    border-radius: 4px; /* Bordes redondeados */
+    z-index: 9999; /* Prioridad sobre otros elementos */
+}
+
+.collapse-item {
+    color: #333333; /* Texto gris oscuro para mejor contraste */
+    padding: 10px 15px;
+    text-decoration: none;
+    display: block;
+    border-radius: 4px;
+}
+
+.collapse-item:hover {
+    background-color: rgba(0, 0, 0, 0.2); /* Fondo gris más oscuro */
+    color: #0056b3; /* Texto azul más oscuro */
+}
+</style>
+
     </head>
 
-    <body id="page-top">
+    <body id="page-top" style="background-color: white;"
 
         <!-- Page Wrapper -->
-        <div id="wrapper">
+        <div id="wrapper" style="background-color: white;">
             <!-- Sidebar -->
             <!-- Sidebar -->
             <ul class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar">
@@ -212,71 +247,37 @@
                 <!-- Divider -->
 
 
-                <!-- Gestionar Pacientes Section -->
+                <!-- Mantenimineto Section -->
                 <%
-                    boolean tienePermisoPacientes
+                    boolean tienePermisoMantenimiento
                             = permisos != null && (permisos.contains("Clientes")
-                            || permisos.contains("Consultas")
-                            || permisos.contains("Historial")
-                            || permisos.contains("Asistencia"));
-                %>
-
-                <% if (tienePermisoPacientes) { %>
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePacientes"
-                       aria-expanded="true" aria-controls="collapsePacientes">
-                        <i class="fas fa-address-book"></i>
-                        <span>Gestionar Pacientes</span>
-                    </a>
-                    <div id="collapsePacientes" class="collapse" aria-labelledby="headingPacientes" data-parent="#accordionSidebar">
-                        <ul class="navbar-nav">
-                            <% if (permisos.contains("Clientes")) { %>
-                            <li><a class="nav-link collapse-item" href="clientes.jsp">Pacientes</a></li>
-                                <% } %>
-                                <% if (permisos.contains("Consultas")) { %>
-                            <li><a class="nav-link collapse-item" href="consultas.jsp">Consultas</a></li>
-                                <% } %>
-                                <% if (permisos.contains("Historial")) { %>
-                            <li><a class="nav-link collapse-item" href="historial.jsp">Historial</a></li>
-                                <% } %>
-                                <% if (permisos.contains("Asistencia")) { %>
-                            <li><a class="nav-link collapse-item" href="asistencias.jsp">Asistencia</a></li>
-                                <% } %>
-                        </ul>
-                    </div>
-                </li>
-                <% } %>
-
-                <!-- Divider -->
-
-
-                <!-- Administrar Section -->
-                <%
-                    boolean tienePermisoAdministrar
-                            = permisos != null && (permisos.contains("Roles")
-                            || permisos.contains("Usuarios")
                             || permisos.contains("Personales")
+                            || permisos.contains("Roles")
+                            || permisos.contains("Usuarios")
                             || permisos.contains("Servicios")
                             || permisos.contains("Ejercicios"));
                 %>
 
-                <% if (tienePermisoAdministrar) { %>
+                <% if (tienePermisoMantenimiento) { %>
                 <li class="nav-item">
-                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAdministrar"
-                       aria-expanded="true" aria-controls="collapseAdministrar">
-                        <i class="fas fa-cogs"></i>
-                        <span>Administrar</span>
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseMantenimiento"
+                       aria-expanded="true" aria-controls="collapseMantenimiento">
+                        <i class="fas fa-address-book"></i>
+                        <span>Mantenimiento</span>
                     </a>
-                    <div id="collapseAdministrar" class="collapse" aria-labelledby="headingAdministrar" data-parent="#accordionSidebar">
+                    <div id="collapseMantenimiento" class="collapse" aria-labelledby="headingMantenimiento" data-parent="#accordionSidebar">
                         <ul class="navbar-nav">
-                            <% if (permisos.contains("Roles")) { %>
+                            <% if (permisos.contains("Clientes")) { %>
+                            <li><a class="nav-link collapse-item" href="clientes.jsp">Clientes</a></li>
+                                <% } %>
+                                <% if (permisos.contains("Personales")) { %>
+                            <li><a class="nav-link collapse-item" href="personales.jsp">Personales</a></li>
+                                <% } %>
+                                <% if (permisos.contains("Roles")) { %>
                             <li><a class="nav-link collapse-item" href="roles.jsp">Roles</a></li>
                                 <% } %>
                                 <% if (permisos.contains("Usuarios")) { %>
                             <li><a class="nav-link collapse-item" href="usuarios.jsp">Usuarios</a></li>
-                                <% } %>
-                                <% if (permisos.contains("Personales")) { %>
-                            <li><a class="nav-link collapse-item" href="personales.jsp">Personales</a></li>
                                 <% } %>
                                 <% if (permisos.contains("Servicios")) { %>
                             <li><a class="nav-link collapse-item" href="servicios.jsp">Servicios</a></li>
@@ -290,7 +291,6 @@
                 <% } %>
 
                 <!-- Divider -->
-
 
                 <!-- Pagos Section -->
                 <%
@@ -321,23 +321,24 @@
 
                 <!-- Divider -->
 
-                <!-- Rutinas Section -->
+                <!-- Tratamiento Section -->
                 <%
-                    boolean tienePermisoRutinas
+                    boolean tienePermisoTratamiento
                             = permisos != null && (permisos.contains("Rutinas")
                             || permisos.contains("Listar_Rutinas")
                             || permisos.contains("Ver_Rutinas")
-                            || permisos.contains("Control_Rutinas"));
+                            || permisos.contains("Control_Rutinas")
+                            || permisos.contains("Asisntencia"));
                 %>
 
-                <% if (tienePermisoRutinas) { %>
+                <% if (tienePermisoTratamiento) { %>
                 <li class="nav-item">
-                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseRutinas"
-                       aria-expanded="true" aria-controls="collapseRutinas">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTratamiento"
+                       aria-expanded="true" aria-controls="collapseTratamiento">
                         <i class="fas fa-running"></i>
-                        <span>Rutinas</span>
+                        <span>Tratamiento</span>
                     </a>
-                    <div id="collapseRutinas" class="collapse" aria-labelledby="headingRutinas" data-parent="#accordionSidebar">
+                    <div id="collapseTratamiento" class="collapse" aria-labelledby="headingTratamiento" data-parent="#accordionSidebar">
                         <ul class="navbar-nav">
                             <% if (permisos.contains("Rutinas")) { %>
                             <li><a class="nav-link collapse-item" href="rutinas.jsp">Nueva rutina</a></li>
@@ -345,11 +346,14 @@
                                 <% if (permisos.contains("Listar_Rutinas")) { %>
                             <li><a class="nav-link collapse-item" href="listarrutinas.jsp">Lista de rutinas</a></li>
                                 <% } %>
-                            <% if (permisos.contains("Ver_Rutinas")) { %>
+                                <% if (permisos.contains("Ver_Rutinas")) { %>
                             <li><a class="nav-link collapse-item" href="verRutinas.jsp">Ver rutinas</a></li>
                                 <% } %>
-                            <% if (permisos.contains("Control_Rutinas")) { %>
+                                <% if (permisos.contains("Control_Rutinas")) { %>
                             <li><a class="nav-link collapse-item" href="controlRutinas.jsp">Seguimiento rutinas</a></li>
+                                <% } %>
+                                    <% if (permisos.contains("Asistencia")) { %>
+                            <li><a class="nav-link collapse-item" href="asistencias.jsp">Asistencias</a></li>
                                 <% } %>
                         </ul>
                     </div>
@@ -357,27 +361,76 @@
                 <% } %>
 
                 <!-- Divider -->
-                <!-- Evaluaciones Section -->
+                
+                <!-- Historial Section -->
                 <%
-                    boolean tienePermisoEvaluaciones
-                            = permisos != null && (permisos.contains("Evaluaciones_Generales")
+                    boolean tienePermisoHistorial
+                            = permisos != null && (permisos.contains("Consultas")
+                            || permisos.contains("Evaluaciones_Generales")
                             || permisos.contains("Evaluaciones_ACL"));
                 %>
 
-                <% if (tienePermisoEvaluaciones) { %>
+                <% if (tienePermisoHistorial) { %>
                 <li class="nav-item">
-                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseEvaluaciones"
-                       aria-expanded="true" aria-controls="collapseEvaluaciones">
-                        <i class="fas fa-diagnoses"></i>
-                        <span>Evaluaciones</span>
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseHistorial"
+                       aria-expanded="true" aria-controls="collapseHistorial">
+                        <i class="fas fa-cogs"></i>
+                        <span>Historial</span>
                     </a>
-                    <div id="collapseEvaluaciones" class="collapse" aria-labelledby="headingEvaluaciones" data-parent="#accordionSidebar">
+                    <div id="collapseHistorial" class="collapse" aria-labelledby="headingHistorial" data-parent="#accordionSidebar">
                         <ul class="navbar-nav">
-                            <% if (permisos.contains("Evaluaciones_Generales")) { %>
+                            <% if (permisos.contains("Consultas")) { %>
+                            <li><a class="nav-link collapse-item" href="consultas.jsp">Consultas</a></li>
+                                <% } %>
+                                <% if (permisos.contains("Evaluaciones_Generales")) { %>
                             <li><a class="nav-link collapse-item" href="evaluaciones.jsp">Evaluaciones Generales</a></li>
                                 <% } %>
                                 <% if (permisos.contains("Evaluaciones_ACL")) { %>
                             <li><a class="nav-link collapse-item" href="acl_evaluaciones.jsp">Evaluaciones ACL</a></li>
+                                <% } %>
+                        </ul>
+                    </div>
+                </li>
+                <% } %>
+
+                <!-- Divider -->
+
+
+
+                
+                <!-- Informes Section -->
+                <%
+                    boolean tienePermisoInformes
+                            = permisos != null && (permisos.contains("Informe Pagos General")
+                            || permisos.contains("Informe Pago Cliente")
+                            || permisos.contains("Informe Rutina Cliente")
+                            || permisos.contains("Informe ACL Cliente")
+                            || permisos.contains("Informe Evaluacion Cliente"));
+                %>
+
+                <% if (tienePermisoInformes) { %>
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseInformes"
+                       aria-expanded="true" aria-controls="collapseInformes">
+                        <i class="fas fa-diagnoses"></i>
+                        <span>Informes</span>
+                    </a>
+                    <div id="collapseInformes" class="collapse" aria-labelledby="headingInformes" data-parent="#accordionSidebar">
+                        <ul class="navbar-nav">
+                            <% if (permisos.contains("Informe Pagos General")) { %>
+                            <li><a class="nav-link collapse-item" href="informepago_vista.jsp">Informe pagos fecha</a></li>
+                                <% } %>
+                                <% if (permisos.contains("Informe Pago Cliente")) { %>
+                            <li><a class="nav-link collapse-item" href="informepagodetallado_vista.jsp">Informe pagos fecha-cliente</a></li>
+                                <% } %>
+                            <% if (permisos.contains("Informe Rutina Cliente")) { %>
+                            <li><a class="nav-link collapse-item" href="informerutinadetallada_vista.jsp">Informe rutinas fecha-cliente</a></li>
+                                <% } %>
+                            <% if (permisos.contains("Informe ACL Cliente")) { %>
+                            <li><a class="nav-link collapse-item" href="informe_acl_detvista.jsp">Informe acl fecha-cliente</a></li>
+                                <% } %>
+                            <% if (permisos.contains("Informe Evaluacion Cliente")) { %>
+                            <li><a class="nav-link collapse-item" href="informe_eva_detvista.jsp">Informe evaluaciones fecha-cliente</a></li>
                                 <% } %>
                         </ul>
                     </div>
@@ -388,9 +441,9 @@
             <!-- End of Sidebar -->
 
             <!-- Content Wrapper -->
-            <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content-wrapper" class="d-flex flex-column" style="background-color: white;">
                 <!-- Main Content -->
-                <div id="content">
+                <div id="content" style="background-color: white;">
                     <!-- Topbar -->
                     <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
                         <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
@@ -428,18 +481,5 @@
                     </nav>
                     <!-- End of Topbar -->
                     <script>
-    // Ensures dropdown closes when the mouse leaves the menu area
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('mouseenter', () => {
-            const target = item.querySelector('.collapse');
-            if (target)
-                target.classList.add('show');
-        });
-
-        item.addEventListener('mouseleave', () => {
-            const target = item.querySelector('.collapse');
-            if (target)
-                target.classList.remove('show');
-        });
-    });
+    
                     </script>

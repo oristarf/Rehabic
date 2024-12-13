@@ -69,10 +69,14 @@
 
             <!-- Enlace para descargar el PDF de clientes -->
             <div class="text-end">
-                <a href="Rclientes.jsp" class="btn btn-info btn-sm mb-3" target="_blank">
+                <a href="ListaClienteJR.jsp" class="btn btn-info btn-sm mb-3" target="_blank">
                     <i class="fas fa-file-pdf"></i> Generar PDF de Clientes
                 </a>
+                <a href="consultas.jsp" class="btn btn-info btn-sm mb-3">
+                    <i class="fas fa-note"></i> Nueva consulta
+                </a>
             </div>
+         
 
             <!-- Tabla de clientes -->
             <div class="table-responsive">

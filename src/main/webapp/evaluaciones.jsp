@@ -96,7 +96,7 @@
     // Selección de cliente de los resultados
     $(document).on("click", ".cliente-item", function() {
         const clienteId = $(this).data("id");
-        const clienteNombre = $(this).text();
+        const clienteNombre = $(this).text().trim();
         
         $("#buscarCliente").val(clienteNombre);
         $("#cliente").val(clienteId); // Establecer el ID del cliente en el campo oculto

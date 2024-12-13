@@ -79,5 +79,55 @@
                 out.print("<div class='alert alert-danger'>Error al guardar: " + e.getMessage() + "</div>");
             }
         }
+    }else if (request.getParameter("listar").equals("listareva")) {
+    try {
+        Statement st = null;
+        ResultSet rs = null;
+        st = conn.createStatement();
+
+        rs = st.executeQuery("SELECT ce.idevaluacion, "
+                            + "TO_CHAR(ce.fecha_evaluacion, 'DD-MM-YYYY') AS fecha_evaluacion, "
+                            + "c.cli_nombres || ' ' || c.cli_apellidos AS paciente, "
+                            + "ce.idconsulta "
+                            + "FROM cabecera_evaluaciones ce "
+                            + "JOIN clientes c ON ce.idcliente = c.idcliente "
+                            + "ORDER BY ce.idevaluacion ASC");
+
+        while (rs.next()) {
+
+%>
+<tr>
+
+    <td><%out.print(rs.getString(1));%></td>
+    <td><%out.print(rs.getString(2));%></td>
+    <td><%out.print(rs.getString(3));%></td>
+    <td><%out.print(rs.getString(4));%></td>
+    <td><i class="fa fa-trash" data-toggle="modal" data-target="#exampleModal" onclick="$('#pkanul').val(<%out.print(rs.getString(1));%>)"></i>
+    <a href="Reporte_Evaluacion.jsp?idevaluacion=<%= rs.getString(1) %>" target="_blank" class="btn btn-info btn-sm">
+            <i class="fas fa-file-pdf"></i>
+        </a></td>
+    
+    
+</tr>
+<%
+
+        }
+    } catch (Exception e) {
+        out.println("error PSQL" + e);
     }
+} else if (request.getParameter("listar").equals("anuleva")) {
+    try {
+        Statement st = null;
+        st = conn.createStatement();
+
+        // Eliminar la cabecera, los detalles se eliminan automáticamente debido a ON DELETE CASCADE
+        String idpkeva = request.getParameter("idpkeva");
+        st.executeUpdate("DELETE FROM cabecera_evaluaciones WHERE idevaluacion=" + idpkeva);
+
+        // Mensaje opcional de éxito
+        out.println("<div class='alert alert-success'>Cabecera y detalles eliminados con éxito.</div>");
+    } catch (Exception e) {
+        out.println("<div class='alert alert-danger'>Error al eliminar: " + e.getMessage() + "</div>");
+    }
+}
 %>

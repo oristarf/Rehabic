@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="62d19308-5fe0-4739-bfa1-5f0b9b839438">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="idacl_cab" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT 
+    TO_CHAR(ac.acl_fecha, 'DD-MM-YYYY') AS fecha_evaluacion,
+    CONCAT(c.cli_nombres, ' ', c.cli_apellidos) AS nombre_cliente,
+    ac.acl_observaciones,
+    CASE 
+        af.acl_fase 
+        WHEN 0 THEN 'Fase Preoperatoria' 
+        WHEN 1 THEN 'Fase 1: Recuperación de la Cirugía' 
+        WHEN 2 THEN 'Fase 2: Fuerza y Control Neuromuscular' 
+        WHEN 3 THEN 'Fase 3: Carrera, Agilidad y Aterrizajes' 
+        END AS fase, 
+    af.acl_medida AS medida, 
+    af.acl_objetivo AS objetivo, 
+    CASE 
+        WHEN ad.cumplido = true THEN 'Cumplido'
+        WHEN ad.cumplido = false THEN 'No cumplido'
+        ELSE 'Sin información' -- Opcional: por si hay valores nulos
+    END AS cumplidos
+FROM 
+    acl_cabecera ac 
+JOIN 
+    clientes c ON ac.idcliente = c.idcliente 
+FULL OUTER JOIN 
+    acl_detalle ad ON ac.idacl_cab = ad.idacl_cab 
+FULL OUTER JOIN 
+    acl_fases af ON ad.idacl_fase = af.idacl_fase 
+WHERE 
+    ac.idacl_cab = $P{idacl_cab}
+ORDER BY 
+    ac.acl_fecha DESC;]]>
+	</queryString>
+	<field name="fecha_evaluacion" class="java.lang.String"/>
+	<field name="nombre_cliente" class="java.lang.String"/>
+	<field name="acl_observaciones" class="java.lang.String"/>
+	<field name="fase" class="java.lang.String"/>
+	<field name="medida" class="java.lang.String"/>
+	<field name="objetivo" class="java.lang.String"/>
+	<field name="cumplidos" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="54" y="12" width="158" height="31" uuid="8d0a8f2f-1ea9-4a3b-a3a4-2d3a8ef0da18"/>
+				<textElement>
+					<font size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Evaluación]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="54" y="43" width="184" height="20" uuid="d491481f-1d4a-4410-9558-2e00d522497b"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Ligamento Cruzado Anterior]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="346" y="23" width="100" height="20" uuid="489686d0-f4d6-45d3-8491-31cf2347a5cd"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cliente]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="473" y="23" width="135" height="20" uuid="a138e400-68de-46c7-bfab-005f662f2753"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre_cliente}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="681" y="23" width="100" height="20" uuid="33a0b2ed-fd68-4652-bcf0-5087c3bdf35a"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="681" y="59" width="100" height="20" uuid="9eca6f48-9f8b-445e-9a67-6dc9d3e711ad"/>
+				<textFieldExpression><![CDATA[$F{fecha_evaluacion}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="31" splitType="Stretch">
+			<staticText>
+				<reportElement x="24" y="11" width="100" height="20" uuid="6777e6b9-c91a-4aab-b5ef-45fe30907adb"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FASE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="267" y="11" width="100" height="20" uuid="8271bbb4-bb9d-46c9-974a-2dda7947f52e"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[MEDIDA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="473" y="11" width="100" height="20" uuid="41d9b064-db43-4525-9bb4-7b661ef903a1"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[OBJETIVO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="687" y="11" width="100" height="20" uuid="472de304-acde-433b-a58e-c5bebdd63b48"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CUMPLIDOS]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="52" splitType="Stretch">
+			<textField>
+				<reportElement x="24" y="12" width="164" height="20" uuid="6f5382cf-0b48-4bde-b5d9-ffce5777ccec"/>
+				<textFieldExpression><![CDATA[$F{fase}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="267" y="12" width="137" height="20" uuid="9f7d6eaf-4f45-44c6-974e-c0302d771210"/>
+				<textFieldExpression><![CDATA[$F{medida}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="473" y="12" width="135" height="20" uuid="cd761db4-29a2-45ed-8f4e-77fc4294ac36"/>
+				<textFieldExpression><![CDATA[$F{objetivo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="687" y="12" width="100" height="20" uuid="e467ffbf-296a-4c12-ad45-bec59f255740"/>
+				<textFieldExpression><![CDATA[$F{cumplidos}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="71" splitType="Stretch">
+			<textField>
+				<reportElement x="168" y="20" width="440" height="38" uuid="01b08b8e-97ca-4de2-a69c-f9a969d8a1df"/>
+				<textFieldExpression><![CDATA[$F{acl_observaciones}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="54" y="20" width="100" height="20" uuid="21a4c3c1-ddd5-4b79-ac8b-e50c8b2da85d"/>
+				<text><![CDATA[OBSERVACIONES:]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -40,7 +40,11 @@
             </form>
 
             <hr>
-
+<div class="text-end">
+                <a href="ListaServicioJR.jsp" class="btn btn-info btn-sm mb-3" target="_blank">
+                    <i class="fas fa-file-pdf"></i> Generar PDF de Servicios
+                </a>
+            </div>
             <!-- Tabla de Servicios -->
             <div class="table-responsive">
                 <table class="table table-bordered table-hover" id="resultado" width="100%" cellspacing="0">

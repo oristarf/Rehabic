@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="663c6961-659b-410c-8c23-f740508c9048">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="idcab_rutina" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT 
+   CONCAT(c.cli_nombres, ' ', c.cli_apellidos) AS cliente_nombre_completo,
+   c.cli_cedula,
+   cab.fecha AS fecha_cabecera,
+   u.usuario AS usuario_cargo,
+   e.eje_nombre AS nombre_ejercicio,
+   det.fecha AS fecha_detalle,
+   det.series,
+   det.repeticiones,
+   det.peso,
+   det.minutos
+FROM 
+   cab_rutinas cab
+INNER JOIN 
+   clientes c ON cab.idcliente = c.idcliente
+INNER JOIN 
+   usuarios u ON cab.idusuario = u.idusuarios
+INNER JOIN 
+   det_rutinas det ON cab.idcab_rutina = det.idcab_rutina
+INNER JOIN 
+   ejercicios e ON det.idejercicio = e.idejercicio
+WHERE 
+   cab.idcab_rutina = $P{idcab_rutina}]]>
+	</queryString>
+	<field name="cliente_nombre_completo" class="java.lang.String"/>
+	<field name="cli_cedula" class="java.lang.String"/>
+	<field name="fecha_cabecera" class="java.sql.Date"/>
+	<field name="usuario_cargo" class="java.lang.String"/>
+	<field name="nombre_ejercicio" class="java.lang.String"/>
+	<field name="fecha_detalle" class="java.sql.Date"/>
+	<field name="series" class="java.lang.Integer"/>
+	<field name="repeticiones" class="java.lang.Integer"/>
+	<field name="peso" class="java.math.BigDecimal"/>
+	<field name="minutos" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="802" height="79" uuid="97e012dc-5e06-4ba8-95d0-7e53549ad1eb"/>
+			</rectangle>
+			<image>
+				<reportElement x="38" y="4" width="98" height="75" uuid="95652391-bb62-4340-b604-8b24e1818b4e"/>
+				<imageExpression><![CDATA["C:\\Users\\Usuario\\Downloads\\aaaaaa.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="154" y="4" width="139" height="39" forecolor="#003333" uuid="469e6308-3fef-48bc-96c3-6bf7fccb50d8"/>
+				<textElement>
+					<font size="26" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RUTINAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="332" y="4" width="100" height="20" uuid="46554c56-d181-4966-829b-ae8e02c6a6b5"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CLIENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="332" y="43" width="100" height="20" uuid="e38b4058-da53-4dce-b19f-98a74479af77"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CEDULA]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="452" y="4" width="160" height="20" uuid="776c6d8c-c83a-4c16-8e84-6006f45eff98"/>
+				<textFieldExpression><![CDATA[$F{cliente_nombre_completo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="452" y="43" width="106" height="20" uuid="fed55d77-7567-44e1-98bd-e2ccf38d4831"/>
+				<textFieldExpression><![CDATA[$F{cli_cedula}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="686" y="4" width="100" height="20" uuid="36cc3b9b-fcd5-4853-b6d3-0e265a1adb30"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA CREACIÓN]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="686" y="43" width="100" height="20" uuid="4b3ca815-5f78-4eb4-96b8-9d519ad9efac"/>
+				<textFieldExpression><![CDATA[$F{fecha_cabecera}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="49" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="29" width="100" height="20" uuid="2009ba08-1859-429c-acc6-6e0fa9551053"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[EJERCICIO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="193" y="29" width="100" height="20" uuid="668a341e-3014-4a93-b97c-5eea0bf98f23"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA RUTINA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="312" y="29" width="100" height="20" uuid="38c7a1c9-2970-48a3-b832-70e15462744e"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[SERIES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="412" y="29" width="100" height="20" uuid="52d53211-a04f-4db0-9c8e-ae2dca2365b3"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[REPETICIONES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="512" y="29" width="100" height="20" uuid="ee36c7a0-cea5-4635-a7a7-7eb1c79eacaf"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PESO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="612" y="29" width="100" height="20" uuid="4d3cde0d-423d-40eb-af38-e8c265bf16bf"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[MINUTOS]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="47" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="7" width="162" height="30" uuid="532bc507-2032-4b71-84f2-4ef0b1f60721"/>
+				<textFieldExpression><![CDATA[$F{nombre_ejercicio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="193" y="7" width="100" height="20" uuid="83c36cda-ec55-4595-a3d3-967917c4eaf4"/>
+				<textFieldExpression><![CDATA[$F{fecha_detalle}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="312" y="7" width="100" height="20" uuid="88bc90f1-baf4-45d4-b22f-4ebf9cc4e6a1"/>
+				<textFieldExpression><![CDATA[$F{series}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="412" y="7" width="100" height="20" uuid="9244aed4-3a88-4917-a36c-72d7764569d4"/>
+				<textFieldExpression><![CDATA[$F{repeticiones}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="512" y="7" width="100" height="20" uuid="f279b23c-3949-4d43-9181-d9f97224ae9b"/>
+				<textFieldExpression><![CDATA[$F{peso}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="612" y="7" width="100" height="20" uuid="23d6070c-ffda-435b-a3ed-184e567d6fe1"/>
+				<textFieldExpression><![CDATA[$F{minutos}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="37" width="802" height="1" uuid="b7be8b5d-bef4-4ab3-a739-440e6875183f"/>
+			</line>
+		</band>
+	</detail>
+	<summary>
+		<band height="307" splitType="Stretch">
+			<staticText>
+				<reportElement x="450" y="247" width="100" height="20" uuid="a46e80db-bd08-4215-9809-315a651fdaba"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FISIOTERAPEUTA]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="579" y="247" width="133" height="20" uuid="b49f022b-d329-4e21-9752-3c05d9903ba0"/>
+				<textFieldExpression><![CDATA[$F{usuario_cargo}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="287" width="802" height="1" uuid="15a60788-66fb-4907-afaf-0782208b12f7"/>
+			</line>
+		</band>
+	</summary>
+</jasperReport>

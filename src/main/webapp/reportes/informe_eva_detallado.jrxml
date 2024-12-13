@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="33479130-87b3-4b1a-9bc2-bfeca86955ba">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="fecha_ini" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fecha_fin" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="idcliente" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+    TO_CHAR(ce.fecha_evaluacion, 'DD-MM-YYYY') AS fecha_evaluacion,
+    CONCAT(c.cli_nombres, ' ', c.cli_apellidos) AS nombre_cliente,
+    de.progreso_observado,
+    de.nivel_dolor,
+    de.movilidad,
+    de.comentarios
+FROM
+    cabecera_evaluaciones ce
+JOIN
+    clientes c ON ce.idcliente = c.idcliente
+JOIN
+    detalle_evaluaciones de ON ce.idevaluacion = de.idevaluacion
+WHERE
+    ce.fecha_evaluacion BETWEEN $P{fecha_ini} AND $P{fecha_fin}
+    AND (ce.idcliente IS NULL OR ce.idcliente = $P{idcliente})
+ORDER BY
+    ce.fecha_evaluacion DESC;]]>
+	</queryString>
+	<field name="fecha_evaluacion" class="java.lang.String"/>
+	<field name="nombre_cliente" class="java.lang.String"/>
+	<field name="progreso_observado" class="java.lang.String"/>
+	<field name="nivel_dolor" class="java.lang.Integer"/>
+	<field name="movilidad" class="java.lang.String"/>
+	<field name="comentarios" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="802" height="79" uuid="b1ab4ddb-048b-4ab6-b996-bf1700c10d18"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="23" y="15" width="314" height="45" uuid="65920f70-29f1-4449-9054-97f7f7342ae5"/>
+				<textElement>
+					<font size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REPORTE EVALUACIONES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="379" y="29" width="100" height="20" uuid="ad1c4dd3-e0e9-411a-9af9-f17a619aaa11"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CLIENTE]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="507" y="29" width="100" height="20" uuid="21bb2116-5d1b-4a82-9557-e8fd2479ec7d"/>
+				<textFieldExpression><![CDATA[$F{nombre_cliente}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="33" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="13" width="100" height="20" uuid="a3f3e8c2-ecc6-4fa2-ab31-2c950903b68c"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="155" y="13" width="100" height="20" uuid="4d905467-0916-4fee-a363-6de52b14b3ac"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PROGRESO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="323" y="13" width="100" height="20" uuid="51eb5d00-4976-4af9-95d0-ff6dde3ab8a7"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[NIVEL DOLOR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="459" y="13" width="100" height="20" uuid="232e81de-dd43-4a5f-83ac-7a75626a0f5c"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[MOVILIDAD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="628" y="13" width="100" height="20" uuid="e194d77f-6753-4b00-b7f8-73ef244e1fa1"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[COMENTARIOS]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="81" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="13" width="114" height="20" uuid="5cca45f4-1408-4ab8-ae8d-13a1400886af"/>
+				<textFieldExpression><![CDATA[$F{fecha_evaluacion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="155" y="13" width="148" height="61" uuid="5b64f872-51a7-4069-b805-ad5b9a791487"/>
+				<textFieldExpression><![CDATA[$F{progreso_observado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="323" y="13" width="100" height="20" uuid="d48a9842-52a9-4fdc-a981-43a0e2bd9d38"/>
+				<textFieldExpression><![CDATA[$F{nivel_dolor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="459" y="13" width="113" height="20" uuid="eef9b7e1-b035-447f-8745-d7afa014da93"/>
+				<textFieldExpression><![CDATA[$F{movilidad}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="628" y="13" width="151" height="61" uuid="972e4ab5-12d0-404f-a12c-0ef74526655c"/>
+				<textFieldExpression><![CDATA[$F{comentarios}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -88,5 +88,5 @@
         } catch (Exception e) {
             out.println("Error al eliminar la asistencia: " + e.getMessage());
         }
-    }
+    } 
 %>

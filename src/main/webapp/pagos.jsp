@@ -21,15 +21,11 @@
             <div class="row">
                 <div class="col-lg-3 ds">
                     <!--COMPLETED ACTIONS DONUTS CHART-->
-                    <h5>DATOS DEL PACIENTE
-
-                    </h5>
+                    <h5>Datos del paciente</h5>
                     
                     <div class="form-group">
                         <label for="idcliente" class="control-label">Paciente</label>
-
                         <select class="form_control" name="idcliente" id="idcliente" onchange="dividircliente(this.value)">
-
                         </select>
                     </div>
 
@@ -43,28 +39,18 @@
                         <label for="fecharegistro" class="control-label">Fecha del Pago</label>
                         <input class="form-control" type="text" name="fecharegistro" id="fecharegistro" onKeyUp="" autocomplete="off" placeholder="Ingrese Fecha" value="<%= fechaFormateada%>" readonly>
                     </div>
-
                     <hr>
-                    <br>
-
                 </div>
-
+ <!-- Detalle de Pagos -->
                 <div class="col-lg-9">
-                    <div class="row">
-
-                        <!-- Detalle de Pagos -->
-                        <div class="col-lg-12">
-                            <div class="panel panel-border panel-warning widget-s-1">
+                    <div class="panel panel-border panel-warning widget-s-1">
                                 <div class="panel-heading">
-                                    <h4 class="mb"><i class="fa fa-archive"></i> <strong>Detalle del pago</strong> </h4>
+                                    <h4 class="mb-4"><i class="fa fa-archive"></i> <strong>Detalle del pago</strong> </h4>
                                 </div>
                                 <div class="panel-body">
-
-                                    <div id="error">
-
-                                    </div>
+                                    <div id="error"></div>
+                                    
                                     <div class="row">
-
                                         <div class="col-md-5">
                                             <div class="form-group">
                                                 <label for="idservicio" class="control-label">Buscar servicio: <span class="symbol required"></span></label>
@@ -89,72 +75,52 @@
                                                 <input class="form-control number" value="1" type="text" name="cantidad" id="cantidad" autocomplete="off" placeholder="Cantidad">
                                             </div>
                                         </div>
-
                                     </div>
 
-                                    <div align="right">
-                                        <button type="button" name="agregar" value="agregar" id="AgregaServicioPago" class="btn btn-primary"onclick=""><span class="fa fa-shopping"></span> Agregar</button>
+                                    <div class="text-end mt-3">
+                                        <button type="button" name="agregar" value="agregar" id="AgregaServicioPago" class="btn btn-primary"onclick="">
+                                            <span class="fa fa-shopping"></span> Agregar
+                                        </button>
                                         <div id="respuesta"></div> <!-- para verificar si muestra los parametros que pasamos en el pagosM.jsp String codcliente = request.getParameter("codcliente");String fecharegistro = request.getParameter("fecharegistro"); etc abajo del boton agregar luego de darle click -->
                                     </div>
-                                    <hr>
-
-                                    <div class="row">
-                                        <div class="col-md-12">
+                                    
                                             <div class="table-responsive">
                                                 <table class="table table-striped table-bordered dt-responsive nowrap" id="carrito">
                                                     <thead>
                                                         <tr>
-                                                            <th>
-                                                                <div align="center">Acción</div>
-                                                            </th>
-                                                            <th>
-                                                                <div align="center">Servicio</div>
-                                                            </th>
-                                                            <th>
-                                                                <div align="center">Precio</div>
-                                                            </th>
-                                                            <th>
-                                                                <div align="center">Cantidad</div>
-                                                            </th>
-                                                            <th>
-                                                                <div align="center">Total</div>
-                                                            </th>
-
+                                                            <th><div align="center">Acción</div></th>
+                                                            <th><div align="center">Servicio</div></th>
+                                                            <th><div align="center">Precio</div> </th>
+                                                            <th><div align="center">Cantidad</div></th>
+                                                            <th> <div align="center">Total</div></th>
                                                         </tr>
                                                     </thead>
 
-                                                    <tbody id="resultados">
-
-
-                                                    </tbody>
-
+                                                    <tbody id="resultados"> </tbody>
                                                 </table>
 
-                                                <table width="302" id="carritototal">
-
+                                                <table class="mt-4" id="carritototal">
                                                     <tr>
-                                                        <td><span class="Estilo9"><label>Total:</label></span></td>
+                                                        <td><label>Total:</label></td>
                                                         <td>
-                                                            <div align="right" class="Estilo9"><label id="lbltotal" name="lbltotal" style="font-weight: bold; font-size: 1.2em;"></label><input type="hidden" name="txtTotal" id="txtTotal" value="0.00" />
+                                                            <div align="right">
+                                                                <label id="lbltotal" name="lbltotal" style="font-weight: bold; font-size: 1.2em;"></label>
+                                                                <input type="hidden" name="txtTotal" id="txtTotal" value="0.00" />
                                                                 <input type="hidden" name="txtTotalPago" id="txtTotalPago" value="" />
                                                             </div>
                                                         </td>
                                                     </tr>
                                                 </table>
                                             </div>
-                                        </div>
-                                    </div>
-
-
-
+                      
                                     <div class="modal-footer">
                                         <button class="btn btn-danger" type="reset" onclick="#" id="cancelar-pago"><span class="fa fa-times"></span> Cancelar</button>
                                         <button type="button" name="btn-submit" id="final-pago" class="btn btn-primary" onclick="#"><span class="fa fa-save"></span> Registrar</button>
                                     </div>
 
                                 </div>
-                            </div>
-                        </div>
+                        
+               
 
                     </div>
                 </div>

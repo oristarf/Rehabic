@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="fe3fbaef-e6f0-4dea-bdfc-2c41e5c357e2">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="fecha_ini" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fecha_fin" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="idcliente" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT 
+    TO_CHAR(ac.acl_fecha, 'DD-MM-YYYY') AS fecha_evaluacion,
+    CONCAT(c.cli_nombres, ' ', c.cli_apellidos) AS nombre_cliente,
+ac.acl_observaciones,
+	
+    CASE 
+        af.acl_fase 
+        WHEN 0 THEN 'Fase Preoperatoria' 
+        WHEN 1 THEN 'Fase 1: Recuperación de la Cirugía' 
+        WHEN 2 THEN 'Fase 2: Fuerza y Control Neuromuscular' 
+        WHEN 3 THEN 'Fase 3: Carrera, Agilidad y Aterrizajes' 
+        END AS fase, 
+    af.acl_medida AS medida, 
+    af.acl_objetivo AS objetivo, 
+    'Cumplido' AS cumplidos 
+FROM 
+    acl_cabecera ac 
+JOIN 
+    clientes c ON ac.idcliente = c.idcliente 
+JOIN 
+    acl_detalle ad ON ac.idacl_cab = ad.idacl_cab 
+JOIN 
+    acl_fases af ON ad.idacl_fase = af.idacl_fase 
+WHERE 
+    ac.acl_fecha BETWEEN $P{fecha_ini} AND $P{fecha_fin}
+    AND (ac.idcliente IS NULL OR ac.idcliente = $P{idcliente})
+ORDER BY 
+    ac.acl_fecha DESC;]]>
+	</queryString>
+	<field name="fecha_evaluacion" class="java.lang.String"/>
+	<field name="nombre_cliente" class="java.lang.String"/>
+	<field name="acl_observaciones" class="java.lang.String"/>
+	<field name="fase" class="java.lang.String"/>
+	<field name="medida" class="java.lang.String"/>
+	<field name="objetivo" class="java.lang.String"/>
+	<field name="cumplidos" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="85" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="802" height="85" uuid="a39b2b13-a2f1-45ff-a4b5-e06c7d038829"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="57" y="10" width="156" height="32" forecolor="#003333" uuid="9e483c4d-cff4-4d11-ba1f-f634a968ad56"/>
+				<textElement>
+					<font size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Evaluaciones]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="57" y="42" width="185" height="20" uuid="2a25a057-b4be-4639-8da3-38d5d9ee0ee7"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Ligamento Cruzado Anterior]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="410" y="22" width="60" height="20" uuid="c4bf893e-2eb5-4f5b-8808-5fcb059e4ee5"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CLIENTE]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="509" y="22" width="148" height="20" uuid="284095ad-49e2-4c76-941b-134e8ff802df"/>
+				<textFieldExpression><![CDATA[$F{nombre_cliente}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="32" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="2" width="100" height="20" uuid="3018f045-6638-4827-8a54-cf45c2bee1ae"/>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="127" y="2" width="138" height="20" uuid="3acfc704-fc9b-4ab1-b212-d40fdd38bb8a"/>
+				<text><![CDATA[Fase]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="307" y="2" width="100" height="20" uuid="4faa8438-42b4-438e-b2f3-4de823748d5c"/>
+				<text><![CDATA[Medida]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="496" y="0" width="100" height="20" uuid="9b7b0736-3216-47ec-8141-754bf6e0677c"/>
+				<text><![CDATA[Objetivo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="634" y="0" width="100" height="20" uuid="ea6e5ab1-4255-49fb-acb0-c8283b662451"/>
+				<text><![CDATA[Observaciones]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="50" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="12" width="111" height="20" uuid="7d9f8ca8-0c45-458a-84f6-0ca00d5f0afd"/>
+				<textFieldExpression><![CDATA[$F{fecha_evaluacion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="127" y="12" width="150" height="38" uuid="3a1eb8af-6e57-4287-bbf6-d50ed27c7e0c"/>
+				<textFieldExpression><![CDATA[$F{fase}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="297" y="12" width="173" height="20" uuid="9a71771f-21cf-43ae-aa7b-99a83ef29775"/>
+				<textFieldExpression><![CDATA[$F{medida}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="496" y="12" width="113" height="20" uuid="c8bb6aa0-2875-4b8c-864c-39a96a576091"/>
+				<textFieldExpression><![CDATA[$F{objetivo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="634" y="12" width="168" height="38" uuid="efe51230-83fd-4a3e-8313-48ef748aa7dd"/>
+				<textFieldExpression><![CDATA[$F{acl_observaciones}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="28" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -36,7 +36,11 @@
 
                 <div id="mensaje" class="mt-3 text-center"></div>
             </form>
-
+<div class="text-end">
+                <a href="ListaEjercicioJR.jsp" class="btn btn-info btn-sm mb-3" target="_blank">
+                    <i class="fas fa-file-pdf"></i> Generar PDF de Ejercicios
+                </a>
+            </div>
             <hr>
 
             <!-- Tabla de Ejercicios -->

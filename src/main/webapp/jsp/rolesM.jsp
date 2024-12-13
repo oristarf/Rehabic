@@ -78,39 +78,51 @@ else if (request.getParameter("listar").equals("cargar")) {
 
     if (rol == null || rol.trim().isEmpty()) {
         out.print("<div class='alert alert-danger'>El nombre del rol no puede estar vacío.</div>");
-    } else {
-        try {
-            conn.setAutoCommit(false); // Inicia la transacción
-            Statement st = conn.createStatement();
+        return;
+    }
 
-            // Verifica si el rol ya existe independientemente de las mayúsculas
-            ResultSet rs = st.executeQuery("SELECT 1 FROM roles WHERE rol ILIKE '" + rol + "'");
-            if (rs.next()) {
-                out.print("<div class='alert alert-danger'>El rol ya existe.</div>");
-            } else {
-                // Inserta el rol y recupera el ID generado
-                rs = st.executeQuery("INSERT INTO roles (rol) VALUES ('" + rol + "') RETURNING idroles");
-                int idRolGenerado = 0; // Cambiado el nombre de la variable para evitar conflicto
-                if (rs.next()) {
-                    idRolGenerado = rs.getInt("idroles");
-                }
+    try {
+        conn.setAutoCommit(false); // Inicia la transacción
 
-                // Asigna permisos al rol si se seleccionaron
-                if (permisos != null) {
-                    for (String permiso : permisos) {
-                        st.executeUpdate("INSERT INTO roles_permisos (idroles, idpermisos) VALUES (" + idRolGenerado + ", " + permiso + ")");
-                    }
-                }
-
-                conn.commit(); // Confirma la transacción
-                out.print("<div class='alert alert-success'>Rol y permisos guardados correctamente.</div>");
-            }
-        } catch (Exception e) {
-            conn.rollback(); // Revertir la transacción en caso de error
-            out.print("<div class='alert alert-danger'>Error al guardar el rol: " + e.getMessage() + "</div>");
+        // Verifica si el rol ya existe
+        PreparedStatement checkStmt = conn.prepareStatement("SELECT 1 FROM roles WHERE rol ILIKE ?");
+        checkStmt.setString(1, rol);
+        ResultSet rs = checkStmt.executeQuery();
+        if (rs.next()) {
+            out.print("<div class='alert alert-danger'>El rol ya existe.</div>");
+            return;
         }
+
+        // Inserta el rol y recupera el ID generado
+        PreparedStatement insertStmt = conn.prepareStatement("INSERT INTO roles (rol) VALUES (?) RETURNING idroles");
+        insertStmt.setString(1, rol);
+        rs = insertStmt.executeQuery();
+
+        int idRolGenerado = 0;
+        if (rs.next()) {
+            idRolGenerado = rs.getInt("idroles");
+        }
+
+        // Asigna permisos al rol si se seleccionaron
+        if (permisos != null) {
+            PreparedStatement permisoStmt = conn.prepareStatement("INSERT INTO roles_permisos (idroles, idpermisos) VALUES (?, ?)");
+            for (String permiso : permisos) {
+                permisoStmt.setInt(1, idRolGenerado);
+                permisoStmt.setInt(2, Integer.parseInt(permiso)); // Asegúrate de que el permiso es un número
+                permisoStmt.executeUpdate();
+            }
+        }
+
+        conn.commit(); // Confirma la transacción
+        out.print("<div class='alert alert-success'>Rol y permisos guardados correctamente.</div>");
+    } catch (Exception e) {
+        conn.rollback(); // Revertir la transacción en caso de error
+        out.print("<div class='alert alert-danger'>Error al guardar el rol: " + e.getMessage() + "</div>");
+    } finally {
+        conn.setAutoCommit(true); // Restablecer el modo de autocommit
     }
 }
+
  else if ("modificar".equals(request.getParameter("listar"))) {
         String idRolEditar = request.getParameter("idrol_m"); // ID del rol
         String rol = request.getParameter("rol"); // Nombre del rol

@@ -149,7 +149,22 @@
             data: datos,
             success: function(response) {
                 $("#mensajeAcl").html(response);
+                setTimeout(() => {
+                limpiarFormulario(); // Limpiar el formulario
+            }, 3000);
+                
             }
         });
     });
+    
+    function limpiarFormulario() {
+    // Resetear el formulario
+    $("#formAclEvaluacion")[0].reset();
+
+    // Limpiar campos dinámicos adicionales
+    $("#resultadosPacientes").html(""); // Limpiar resultados de búsqueda de pacientes
+    $("#plan_tratamiento").html('<option value="">Seleccione el plan de tratamiento</option>'); // Limpiar el dropdown
+    $("#tablaFase tbody").html(""); // Limpiar la tabla de fases
+    $("#mensajeAcl").html(""); // Limpiar mensajes anteriores
+}
 </script>

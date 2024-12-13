@@ -255,11 +255,11 @@
                 $("#mensaje").html("<div class='alert alert-danger'>La cédula ya está registrada. Use una diferente.</div>");
             } else if (response.trim() === "disponible") {
                 // Proceder a guardar
-                const datos = $("#form").serialize();
+                const datos = $("#form").serialize()  + `&usuario_asociado=${usuarioAsociado}`;
                 $.ajax({
                     url: 'jsp/personalesM.jsp',
                     type: 'post',
-                    data: datos + `&idusuarios=${idusuarios || ''}&listar=cargar`, // Incluimos idusuarios si está disponible
+                    data: datos, // Incluimos idusuarios si está disponible
                     success: function (response) {
                         $("#mensaje").html(response);
                         rellenardatos(); // Actualizamos la tabla

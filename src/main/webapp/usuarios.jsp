@@ -24,7 +24,7 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="clave" class="form-label">Clave</label>
-                        <input type="text" class="form-control form-control-user" id="clave" name="clave" placeholder="Clave">
+                        <input type="password" class="form-control form-control-user" id="clave" name="clave" placeholder="Clave">
                     </div>
                 </div>
 
@@ -85,7 +85,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="clave_m" class="form-label">Clave</label>
-                        <input type="text" class="form-control" id="clave_m" name="clave" placeholder="Clave">
+                        <input type="password" class="form-control" id="clave_m" name="clave" placeholder="Clave">
                     </div>
                     <div class="mb-3">
                         <label for="rol_m" class="form-label">Rol</label>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="814e401b-6078-4361-8082-d341cc375505">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="idevaluacion" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT 
+    TO_CHAR(ce.fecha_evaluacion, 'DD-MM-YYYY') AS fecha_evaluacion,
+    CONCAT(c.cli_nombres, ' ', c.cli_apellidos) AS nombre_cliente,
+    ce.idconsulta AS consulta_asociada,
+    de.progreso_observado,
+    de.nivel_dolor,
+    CASE 
+        de.movilidad
+        WHEN 'limitada' THEN 'Movilidad limitada'
+        WHEN 'moderada' THEN 'Movilidad moderada'
+        WHEN 'completa' THEN 'Movilidad completa'
+        ELSE 'Sin información'
+    END AS movilidad,
+    de.comentarios
+FROM 
+    cabecera_evaluaciones ce
+JOIN 
+    clientes c ON ce.idcliente = c.idcliente
+FULL OUTER JOIN 
+    detalle_evaluaciones de ON ce.idevaluacion = de.idevaluacion
+WHERE 
+    ce.idevaluacion = $P{idevaluacion}
+ORDER BY 
+    ce.fecha_evaluacion DESC;]]>
+	</queryString>
+	<field name="fecha_evaluacion" class="java.lang.String"/>
+	<field name="nombre_cliente" class="java.lang.String"/>
+	<field name="consulta_asociada" class="java.lang.Integer"/>
+	<field name="progreso_observado" class="java.lang.String"/>
+	<field name="nivel_dolor" class="java.lang.Integer"/>
+	<field name="movilidad" class="java.lang.String"/>
+	<field name="comentarios" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="65" y="18" width="170" height="42" uuid="ac32bb8f-8739-423b-b7c3-d27ddc852e7c"/>
+				<textElement>
+					<font size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[EVALUACION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="665" y="18" width="100" height="20" uuid="95347cef-3730-47ab-8d82-833450f2354b"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="665" y="40" width="116" height="20" uuid="0ecdb4f4-413a-4d8c-8207-8576af3c1cda"/>
+				<textFieldExpression><![CDATA[$F{fecha_evaluacion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="308" y="20" width="100" height="20" uuid="97db4d7e-6dcb-44f3-b7c1-b9b1ff3fa933"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CLIENTE]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="427" y="20" width="159" height="20" uuid="b9488580-fa30-42a9-a283-04836e1c17bd"/>
+				<textFieldExpression><![CDATA[$F{nombre_cliente}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="31" splitType="Stretch">
+			<staticText>
+				<reportElement x="21" y="11" width="100" height="20" uuid="0b8dedce-18b2-492b-a572-47142908ef8b"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PROGRESO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="252" y="11" width="100" height="20" uuid="65f30ed7-e1b0-418f-8621-0a4e12d63e49"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[NIVEL DOLOR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="397" y="11" width="100" height="20" uuid="bf05f9c8-899e-4606-a86a-ec1cc61f4d80"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[MOVILIDAD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="565" y="11" width="100" height="20" uuid="9ff43986-7cf1-4203-9bd9-6e7bca1debfd"/>
+				<text><![CDATA[COMENTARIOS]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<textField>
+				<reportElement x="21" y="13" width="190" height="46" uuid="ca56c08c-1a50-46ad-b6c9-ab96693a5f10"/>
+				<textFieldExpression><![CDATA[$F{progreso_observado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="252" y="13" width="100" height="20" uuid="9fbfc86c-941a-46ec-b876-4a3f13d21283"/>
+				<textFieldExpression><![CDATA[$F{nivel_dolor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="397" y="13" width="112" height="20" uuid="9d4d9f1d-9b98-4568-a008-f9ca4c9236f7"/>
+				<textFieldExpression><![CDATA[$F{movilidad}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="565" y="13" width="180" height="46" uuid="46d268f2-8c7f-4072-97d0-b96ed248cd20"/>
+				<textFieldExpression><![CDATA[$F{comentarios}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

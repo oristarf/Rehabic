@@ -27,7 +27,7 @@
                 <!-- Lista de permisos -->
                 <div class="mb-3">
                     <label for="permissions-container" class="form-label">Permisos</label>
-                    <div id="permissions-container">
+                    <div id="permissions-container" class="checkbox-grid">
                         <!-- Los permisos se cargarán dinámicamente aquí -->
                     </div>
                 </div>
@@ -80,7 +80,7 @@
 
                 <!-- Contenedor de permisos -->
                 <label class="form-label mt-3">Permisos</label>
-                <div id="permissions-container-edit">
+                <div id="permissions-container-edit" class="checkbox-grid">
                     <!-- Los permisos asociados se cargarán dinámicamente aquí -->
                 </div>
             </div>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d0144e0f-f001-4964-8c6a-fb1519203beb">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="18"/>
+	<parameter name="fecha_ini" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fecha_fin" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT 
+    cp.idcab_pago AS id_cabecera,
+    TO_CHAR(cp.fecha, 'DD-MM-YYYY') AS fecha_cabecera,
+    CONCAT(c.cli_nombres, ' ', c.cli_apellidos) AS nombre_cliente,
+    cp.total AS total,
+    TO_CHAR($P{fecha_ini}::date, 'DD-MM-YYYY') AS fecha_inicio,
+    TO_CHAR($P{fecha_fin}::date, 'DD-MM-YYYY') AS fecha_fin
+FROM 
+    cab_pago cp
+JOIN 
+    clientes c ON cp.idcliente = c.idcliente
+WHERE 
+    cp.fecha BETWEEN $P{fecha_ini} AND $P{fecha_fin}
+ORDER BY 
+    cp.fecha DESC;
+]]>
+	</queryString>
+	<field name="id_cabecera" class="java.lang.Integer"/>
+	<field name="fecha_cabecera" class="java.lang.String"/>
+	<field name="nombre_cliente" class="java.lang.String"/>
+	<field name="total" class="java.lang.Integer"/>
+	<field name="fecha_inicio" class="java.lang.String"/>
+	<field name="fecha_fin" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="79" backcolor="#003333" uuid="7c9c5a6f-3978-402d-b81f-b5af39d2136f"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="14" y="10" width="207" height="33" forecolor="#FFFFFF" uuid="90c12dcf-fb31-47a1-835d-a02de4cacee9"/>
+				<textElement>
+					<font size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INFORME DE PAGOS]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="83" y="50" width="100" height="20" forecolor="#FFFFFF" uuid="d75a820b-dbf6-4d39-ac91-90033c4b46da"/>
+				<textFieldExpression><![CDATA[$P{fecha_ini}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="334" y="50" width="100" height="20" forecolor="#FFFFFF" uuid="f6971699-dd1d-4217-b341-141882b729c4"/>
+				<textFieldExpression><![CDATA[$P{fecha_fin}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="14" y="50" width="38" height="20" forecolor="#FFFFFF" uuid="4b056de3-2d4f-4f8c-8102-a0fa3576455a"/>
+				<text><![CDATA[DESDE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="257" y="50" width="40" height="20" forecolor="#FFFFFF" uuid="00ccecdd-80dc-448d-822d-4888958b2c47"/>
+				<text><![CDATA[HASTA]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement x="14" y="0" width="100" height="20" uuid="905c72aa-e229-448d-b956-afd561a9547d"/>
+				<text><![CDATA[ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="141" y="0" width="100" height="20" uuid="0feab452-c2d0-4a62-882b-e53d00cf89ff"/>
+				<text><![CDATA[FECHA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="0" width="100" height="20" uuid="3fdcbf97-eb79-444a-b2e8-f11060384b30"/>
+				<text><![CDATA[CLIENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="452" y="2" width="100" height="20" uuid="53ccfeb0-ec97-4017-8fef-878fde457dc0"/>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="34" splitType="Stretch">
+			<textField>
+				<reportElement x="14" y="14" width="100" height="20" uuid="ec0e2dc6-3240-478c-9940-ae46a7b4050f"/>
+				<textFieldExpression><![CDATA[$F{id_cabecera}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="141" y="14" width="100" height="20" uuid="e60c0334-008b-4c2a-8eb8-a05c2aa920f2"/>
+				<textFieldExpression><![CDATA[$F{fecha_cabecera}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="280" y="14" width="100" height="20" uuid="b9a91740-cefc-4d53-b714-cb69f5c090fc"/>
+				<textFieldExpression><![CDATA[$F{nombre_cliente}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="452" y="14" width="100" height="20" uuid="99807ef2-9531-460e-aab3-0dfd86174f67"/>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="44" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
