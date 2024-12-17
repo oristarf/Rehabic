@@ -28,13 +28,11 @@
                             </div>
                         </div>
 
-                        <!-- Campo ID Cliente -->
-                        <div class="row">
-                            <div class="col-md-12 mb-3">
-                                <label for="idcliente" class="form-label">ID Cliente:</label>
-                                <input type="text" class="form-control form-control-user" name="idcliente" id="idcliente" autocomplete="off" placeholder="Ingrese el ID del cliente (opcional)">
-                            </div>
-                        </div>
+                       <div class="col-md-6 mb-3">
+                        <label for="idcliente" class="control-label">Cliente</label>
+                        <select class="form_control" name="idcliente" id="idcliente">
+                        </select>
+                    </div>
 
                         <!-- Botón para Generar Informe -->
                         <div class="d-flex justify-content-center mt-4">
@@ -92,6 +90,23 @@
     $(document).ready(function () {
          llenadoeva();
         });
+          buscadorCliente();
+        // Llamada para llenar el select de clientes
+    // Llamada para llenar el select de clientes
+    function buscadorCliente() {
+        $.ajax({
+            data: { listar: "buscadorCliente" }, // Parámetro para activar el bloque en buscar.jsp
+            url: "jsp/buscar.jsp", // Ruta correcta del archivo JSP
+            type: "POST",
+            success: function (response) {
+                $("#idcliente").html(response); // Rellena el select con los clientes
+            },
+            error: function (xhr, status, error) {
+                console.error("Error al cargar clientes: ", error); // Muestra el error en la consola
+            }
+        });
+    }
+
     $("#acptar").click(function () {
         // Obtener valores de los campos
         fecha_ini = $("#fechainicio").val();

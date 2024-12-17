@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2b8d6812-522d-42c6-b5b6-7916ece6c569">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="fecha_ini" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fecha_fin" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="idcliente" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT 
+    cr.idcab_rutina AS id_cabecera,
+    TO_CHAR(cr.fecha, 'DD-MM-YYYY') AS fecha_cabecera,
+    CONCAT(c.cli_nombres, ' ', c.cli_apellidos) AS nombre_cliente,
+    c.cli_cedula AS cedula_cliente,
+    TO_CHAR(cr.fecha, 'DD-MM-YYYY') AS fecha_inicio,
+    TO_CHAR(cr.fecha, 'DD-MM-YYYY') AS fecha_fin,
+    e.eje_nombre AS ejercicio,
+    TO_CHAR(dr.fecha, 'DD-MM-YYYY') AS fecha_ejercicio,
+    dr.series,
+    dr.repeticiones,
+    dr.peso,
+    dr.minutos,
+    dr.estado,
+    CASE 
+        WHEN dr.retroalimentacion IS NOT NULL THEN dr.retroalimentacion
+        ELSE 'NO TIENE'
+    END AS retroalimentacion
+FROM 
+    cab_rutinas cr
+    JOIN det_rutinas dr ON cr.idcab_rutina = dr.idcab_rutina
+    JOIN ejercicios e ON dr.idejercicio = e.idejercicio
+    JOIN clientes c ON cr.idcliente = c.idcliente
+WHERE 
+    cr.fecha BETWEEN $P{fecha_ini} AND $P{fecha_fin}
+    AND (c.idcliente = $P{idcliente}::integer OR $P{idcliente} IS NULL)
+ORDER BY 
+    cr.fecha DESC;]]>
+	</queryString>
+	<field name="id_cabecera" class="java.lang.Integer"/>
+	<field name="fecha_cabecera" class="java.lang.String"/>
+	<field name="nombre_cliente" class="java.lang.String"/>
+	<field name="cedula_cliente" class="java.lang.String"/>
+	<field name="fecha_inicio" class="java.lang.String"/>
+	<field name="fecha_fin" class="java.lang.String"/>
+	<field name="ejercicio" class="java.lang.String"/>
+	<field name="fecha_ejercicio" class="java.lang.String"/>
+	<field name="series" class="java.lang.Integer"/>
+	<field name="repeticiones" class="java.lang.Integer"/>
+	<field name="peso" class="java.math.BigDecimal"/>
+	<field name="minutos" class="java.lang.Integer"/>
+	<field name="estado" class="java.lang.String"/>
+	<field name="retroalimentacion" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="66" y="21" width="141" height="37" uuid="4babaf5b-b1d8-4f05-955e-5379c9258de2"/>
+				<textElement>
+					<font size="26" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RUTINAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="257" y="21" width="100" height="20" uuid="3e83a0eb-f885-4ef0-8545-e75d12d5a511"/>
+				<text><![CDATA[CLIENTE]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="383" y="21" width="180" height="20" uuid="c32323e4-dde4-4fb9-ab8e-62029de72819"/>
+				<textFieldExpression><![CDATA[$F{nombre_cliente}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="257" y="58" width="100" height="20" uuid="66a69839-2dd9-4a5c-9dff-f0a4bf72e2a1"/>
+				<text><![CDATA[CEDULA]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="383" y="58" width="113" height="20" uuid="da0e02ab-c1c5-4b5b-8298-a5c8f5ed3674"/>
+				<textFieldExpression><![CDATA[$F{cedula_cliente}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="649" y="21" width="100" height="20" uuid="b1a06f08-b1c2-4cbf-93a7-6440dd12c361"/>
+				<textFieldExpression><![CDATA[$F{fecha_inicio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="649" y="57" width="100" height="20" uuid="e444bc87-2d5c-4fec-9c8f-982466449755"/>
+				<textFieldExpression><![CDATA[$F{fecha_fin}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="590" y="21" width="28" height="20" uuid="341e736f-3a35-47fe-aa4d-49840168bdb9"/>
+				<text><![CDATA[DE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="590" y="59" width="46" height="20" uuid="68dc3231-c53f-4eda-983c-488d00c8d4be"/>
+				<text><![CDATA[HASTA]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="29" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="78" height="20" uuid="649bcb4c-322e-4232-ae6b-5de249b5766a"/>
+				<text><![CDATA[FECHA CARGA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="107" y="0" width="100" height="20" uuid="16f8fc1f-5eb5-4ad0-96c4-1099ad39a2c6"/>
+				<text><![CDATA[EJERCICIO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="230" y="0" width="100" height="20" uuid="39d4651b-1581-461b-b5a3-b3198be912d8"/>
+				<text><![CDATA[FECHA EJERCICIO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="357" y="0" width="44" height="20" uuid="28e40fe9-2b6e-4dc2-8501-96a37ab1ad88"/>
+				<text><![CDATA[SERIES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="411" y="0" width="42" height="20" uuid="bcb369b1-f7af-428d-9cf0-9d598c6ddfd2"/>
+				<text><![CDATA[REPS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="468" y="0" width="28" height="20" uuid="08a89e8d-1833-4683-88d2-c735d51651e1"/>
+				<text><![CDATA[peso]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="511" y="0" width="52" height="20" uuid="8f5d9e29-77f2-40ad-8236-75576b4e465c"/>
+				<text><![CDATA[minutos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="663" y="0" width="122" height="20" uuid="8e1466c4-ca07-4fd8-8769-af45d684ad6a"/>
+				<text><![CDATA[RETROALIMENTACION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="563" y="0" width="100" height="20" uuid="b39e7c57-af3e-4c71-9c9c-14c15576d71c"/>
+				<text><![CDATA[estado]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="42" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="20" uuid="26e7fac5-ab9e-4bb4-9bca-3d63b1e4db32"/>
+				<textFieldExpression><![CDATA[$F{fecha_cabecera}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="107" y="0" width="123" height="40" uuid="f39c68ef-6ae8-4ac6-8479-8349b3875e38"/>
+				<textFieldExpression><![CDATA[$F{ejercicio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="230" y="0" width="100" height="20" uuid="152eebdb-cb20-411c-a653-58efe0241577"/>
+				<textFieldExpression><![CDATA[$F{fecha_ejercicio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="357" y="0" width="26" height="20" uuid="40c64f7c-c165-414a-bcc2-3229ba51ec88"/>
+				<textFieldExpression><![CDATA[$F{series}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="411" y="0" width="28" height="20" uuid="90c84757-ed11-411e-ad32-6b80d092e749"/>
+				<textFieldExpression><![CDATA[$F{repeticiones}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="468" y="0" width="28" height="20" uuid="6bd3aadb-18c4-445c-a275-74476eb2bfc0"/>
+				<textFieldExpression><![CDATA[$F{peso}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="511" y="0" width="25" height="20" uuid="5cb8c200-1bcc-4d49-b127-92a4d58162b6"/>
+				<textFieldExpression><![CDATA[$F{minutos}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="563" y="0" width="100" height="20" uuid="3cec0f24-a316-4688-ae64-7e5b59674176"/>
+				<textFieldExpression><![CDATA[$F{estado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="663" y="0" width="139" height="40" uuid="fe55ab48-ab29-42dc-a1be-4026f77364ef"/>
+				<textFieldExpression><![CDATA[$F{retroalimentacion}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

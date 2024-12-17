@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b76f1f0c-e5fa-47cb-981f-20658b7d84aa">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="31"/>
+	<parameter name="idcab_pago" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT DISTINCT
+    cp.idcab_pago,
+    CONCAT(c.cli_nombres, ' ', c.cli_apellidos) AS cliente_nombre_completo,
+    c.cli_cedula,
+    cp.total, 
+    cp.metodo_pago, 
+    TO_CHAR(cp.fecha, 'DD/MM/YYYY') AS fecha, 
+    CASE 
+        WHEN s.ser_tipo = 'Diario' THEN 'NO TIENE'
+        ELSE COALESCE(TO_CHAR(cp.fecha_vencimiento, 'DD/MM/YYYY'), 'NO TIENE')
+    END AS fecha_vencimiento,
+    dp.det_cantidad, 
+    dp.det_precio,
+    s.ser_nombre,
+    s.ser_tipo
+FROM 
+    cab_pago cp
+LEFT JOIN 
+    clientes c ON cp.idcliente = c.idcliente
+LEFT JOIN 
+    det_pago dp ON cp.idcab_pago = dp.idcab_pago
+LEFT JOIN 
+    servicios s ON dp.idservicio = s.idservicio
+WHERE 
+    cp.idcab_pago =$P{idcab_pago}]]>
+	</queryString>
+	<field name="idcab_pago" class="java.lang.Integer"/>
+	<field name="cliente_nombre_completo" class="java.lang.String"/>
+	<field name="cli_cedula" class="java.lang.String"/>
+	<field name="total" class="java.lang.Integer"/>
+	<field name="metodo_pago" class="java.lang.String"/>
+	<field name="fecha" class="java.lang.String"/>
+	<field name="fecha_vencimiento" class="java.lang.String"/>
+	<field name="det_cantidad" class="java.lang.Integer"/>
+	<field name="det_precio" class="java.lang.Integer"/>
+	<field name="ser_nombre" class="java.lang.String"/>
+	<field name="ser_tipo" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<rectangle radius="10">
+				<reportElement x="3" y="0" width="555" height="79" uuid="79e31740-f3b7-4a47-aada-01bd647ef7b2"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="28" y="22" width="262" height="34" forecolor="#003333" uuid="9ad6e7c6-c05a-4346-9a42-08e1d53e01f2"/>
+				<textElement>
+					<font size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[COMPROBANTE DE PAGO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="439" y="12" width="100" height="20" uuid="40f6bbf4-87f0-4c12-8fa9-c19ed7fb4a90"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[N° DE OPERACIÓN]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="464" y="36" width="47" height="20" uuid="7a7834dd-7eb7-40f8-975b-411164d34195"/>
+				<textFieldExpression><![CDATA[$F{idcab_pago}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="46" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="10" width="555" height="36" uuid="4a1da799-dd4d-4283-9e89-36e356898a10"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="41" y="10" width="53" height="20" uuid="4b2c73be-bd5e-420f-9e66-ec7eb24e086f"/>
+				<text><![CDATA[CEDULA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="233" y="10" width="61" height="20" uuid="7ca52e43-cace-4c08-b608-bd835eb91baf"/>
+				<text><![CDATA[CLIENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="425" y="10" width="100" height="20" uuid="d175f303-600c-4a04-9294-47ddec114a41"/>
+				<text><![CDATA[FECHA EMISIÓN]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="28" y="26" width="100" height="20" uuid="381741a4-aeed-4bbc-b1d5-4bf3155c9be4"/>
+				<textFieldExpression><![CDATA[$F{cli_cedula}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="194" y="26" width="148" height="20" uuid="b289b753-ba73-4b20-aee9-9fa43fc919dd"/>
+				<textFieldExpression><![CDATA[$F{cliente_nombre_completo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="425" y="26" width="100" height="20" uuid="8321f60b-186e-40ca-b53a-b9f6ba673d8e"/>
+				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement x="3" y="2" width="100" height="20" uuid="e782acf1-80de-452f-9d71-9ec9985c573e"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[SERVICIO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="190" y="2" width="100" height="20" uuid="a654c207-9e93-4779-9d7a-fe5a8b194938"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PRECIO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="304" y="0" width="100" height="20" uuid="d1d8fbaa-2036-4d53-8147-586d4c42cd2b"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CANTIDAD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="439" y="2" width="100" height="20" uuid="94e42e0d-3e31-44bb-bbe6-9735af5b0790"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[VENCIMIENTO]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="36" splitType="Stretch">
+			<textField>
+				<reportElement x="3" y="0" width="158" height="29" uuid="9a6ed6f4-7642-451b-95cd-a015aaa377c9"/>
+				<textFieldExpression><![CDATA[$F{ser_nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="190" y="0" width="100" height="20" uuid="60bef134-9e36-469e-aaac-8c300c827e77"/>
+				<textFieldExpression><![CDATA[$F{det_precio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="315" y="0" width="38" height="20" uuid="9e0964cc-4b40-4663-a279-a86a8528340d"/>
+				<textFieldExpression><![CDATA[$F{det_cantidad}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="439" y="0" width="116" height="20" uuid="1cc78a58-08c1-4825-9f63-67cf5cbb62e2"/>
+				<textFieldExpression><![CDATA[$F{fecha_vencimiento}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="3" y="33" width="552" height="3" uuid="4deb9d00-08a9-4804-aa60-e53bd31969d1"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch">
+			<staticText>
+				<reportElement x="325" y="21" width="42" height="20" uuid="2cf41738-70a4-4bc6-a521-94455798adee"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="404" y="21" width="100" height="20" uuid="19f57141-16d7-4139-ad98-e5cf724d46cf"/>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

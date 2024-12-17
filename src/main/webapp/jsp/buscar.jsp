@@ -43,9 +43,30 @@ else if (request.getParameter("listar").equals("buscarservicio")) {
             out.println("Error PSQL" + e);
         }
     }
+else
+if (request.getParameter("listar").equals("buscadorCliente")) {
+    try {
+        Statement st = conn.createStatement(); // Asegúrate de inicializar el Statement
+        ResultSet rs = st.executeQuery("SELECT idcliente, cli_nombres, cli_apellidos FROM clientes ORDER BY idcliente DESC;"); // Consulta SQL correcta
 
-
-%>             
+%>
+<option value="">Seleccionar cliente</option>
+<%
+        while (rs.next()) { 
+%>
+<option value="<%= rs.getInt("idcliente") %>">
+    <%= rs.getString("cli_nombres") %> <%= rs.getString("cli_apellidos") %>
+</option>
+<%
+        }
+        rs.close(); // Cerrar ResultSet
+        st.close(); // Cerrar Statement
+    } catch (Exception e) {
+        out.println("Error PSQL: " + e.getMessage());
+    }
+}
+%>
+           
 
 
 

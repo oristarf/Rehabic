@@ -69,12 +69,8 @@ WHERE
 				</textElement>
 				<text><![CDATA[CLIENTE]]></text>
 			</staticText>
-			<image>
-				<reportElement x="34" y="1" width="87" height="127" uuid="45e2b70f-c66b-4c25-b1c5-3a8cbccf91de"/>
-				<imageExpression><![CDATA["C:\\Users\\Usuario\\Downloads\\aaaaaa.png"]]></imageExpression>
-			</image>
 			<staticText>
-				<reportElement x="146" y="31" width="263" height="37" forecolor="#006666" uuid="0b8d2e27-09e9-47e5-bd81-35d29751f2ed"/>
+				<reportElement x="34" y="31" width="263" height="37" forecolor="#006666" uuid="0b8d2e27-09e9-47e5-bd81-35d29751f2ed"/>
 				<textElement>
 					<font size="20" isBold="true"/>
 				</textElement>

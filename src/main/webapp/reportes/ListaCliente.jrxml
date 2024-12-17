@@ -97,7 +97,7 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="20">
+		<band height="27">
 			<line>
 				<reportElement positionType="FixRelativeToBottom" x="0" y="19" width="555" height="1" uuid="b749c6e7-4c14-40ec-a064-9753656c8070"/>
 			</line>
@@ -130,25 +130,25 @@
 				<textFieldExpression><![CDATA[$F{cli_fechanacimiento}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="316" y="0" width="79" height="20" uuid="c056ffb3-e810-496b-a80f-3d75cef8aa57"/>
-				<textElement>
-					<font size="14"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{cli_telefono}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement x="395" y="0" width="79" height="20" uuid="7a49a03e-4db2-4268-8941-1ffa53df338d"/>
+				<reportElement x="408" y="0" width="79" height="20" uuid="7a49a03e-4db2-4268-8941-1ffa53df338d"/>
 				<textElement>
 					<font size="14"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{cli_telurgencia}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="474" y="0" width="79" height="20" uuid="b06e5c24-7337-4b50-b5d8-62aa7921a01e"/>
+				<reportElement x="499" y="0" width="39" height="20" uuid="b06e5c24-7337-4b50-b5d8-62aa7921a01e"/>
 				<textElement>
 					<font size="14"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{idusuarios}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="329" y="0" width="79" height="20" uuid="c056ffb3-e810-496b-a80f-3d75cef8aa57"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cli_telefono}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

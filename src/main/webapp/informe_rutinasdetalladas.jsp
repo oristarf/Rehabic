@@ -9,7 +9,7 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <%
    try {
-    File reportFile = new File(application.getRealPath("reportes/inforutinadetallada.jasper"));
+    File reportFile = new File(application.getRealPath("reportes/info_rutinadetallada.jasper"));
     if (!reportFile.exists()) {
         throw new FileNotFoundException("El archivo Jasper no se encuentra en la ruta especificada.");
     }

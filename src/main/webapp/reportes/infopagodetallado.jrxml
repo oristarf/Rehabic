@@ -37,7 +37,7 @@ FROM
     servicios s ON dp.idservicio = s.idservicio
 JOIN 
     clientes c ON cp.idcliente = c.idcliente
-WHERE 
+WHERE
     cp.fecha BETWEEN $P{fecha_ini} AND $P{fecha_fin}
     AND (COALESCE(1, 0) = 0 OR c.idcliente = $P{idcliente})
 ORDER BY 

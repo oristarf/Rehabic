@@ -17,7 +17,7 @@
         }
 
         // Ruta al archivo del reporte
-        File reportFile = new File(application.getRealPath("reportes/reporte_rutina.jasper"));
+        File reportFile = new File(application.getRealPath("reportes/REPORTERUTINAS.jasper"));
 
         // Parámetros para el reporte
         Map<String, Object> parametros = new HashMap<>();
